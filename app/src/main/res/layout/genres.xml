@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background6"
+        android:fitsSystemWindows="true"
+        tools:context=".MainActivity">
+
+        <!-- Movie Dates Logo -->
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="327dp"
+            android:layout_height="68dp"
+            android:layout_marginTop="80dp"
+            android:contentDescription="@string/moviedateslogo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_movie_dates" />
+
+        <!-- "Help us determine what you like" Text-->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/roboto"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:paddingTop="10dp"
+            android:text="@string/help_us_determine_what_you_like"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <GridLayout
+            android:id="@+id/genreGrid"
+            android:layout_width="327dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="24dp"
+            android:columnCount="2"
+            android:useDefaultMargins="true"
+            app:layout_constraintTop_toBottomOf="@id/titleText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- ACTION -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/actionCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_action">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:fontFamily="@font/roboto"
+                        android:padding="12dp"
+                        android:text="@string/action"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ADVENTURE -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/adventureCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_adventure">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/adventure"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ANIMATION -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/animationCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_animation">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/animation"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- COMEDY -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/comedyCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_comedy">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/comedy"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CRIME -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/crimeCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_crime">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/crime"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- DOCUMENTARY -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/documentaryCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_documentary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/documentary"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- DRAMA -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/dramaCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_drama">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/drama"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- FAMILY -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/familyCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_family">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/family"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- FANTASY -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/fantasyCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_fantasy">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/fantasy"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- HISTORY -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/historyCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_history">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/history"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- HORROR -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/horrorCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_horror">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/horror"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- MUSIC -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/musicCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_music">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/music"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- MYSTERY -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mysteryCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_mystery">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/mystery"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ROMANCE -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/romanceCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_romance">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/romance"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- SCI-FI -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/scifiCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_sci">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/sci_fi"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- THRILLER -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/thrillerCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_thriller">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/thriller"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- WAR -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/warCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_war">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/war"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- WESTERN -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/westernCard"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/genre_western">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:padding="12dp"
+                        android:text="@string/western"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+
+                </FrameLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
+
+        <!-- Next Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nextButton"
+            android:layout_width="327dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/black_3d_button"
+            android:elevation="6dp"
+            android:fontFamily="@font/roboto"
+            android:stateListAnimator="@null"
+            android:text="@string/next"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/genreGrid" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:accessibilityHeading="false"
+    android:background="@drawable/background"
+    android:fitsSystemWindows="true"
+    android:visibility="visible"
+    tools:context=".MainActivity"
+    tools:visibility="visible">
+
+    <!-- Movie Dates Logo -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="327dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="188dp"
+        android:contentDescription="@string/moviedateslogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_movie_dates" />
+
+    <!-- "Create an account or continue as guest" Text-->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        android:lineSpacingExtra="2dp"
+        android:paddingTop="12dp"
+        android:text="@string/create_an_account_or_continue_as_guest"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <!-- "Enter your email to sign up for this app" Text-->
+    <TextView
+        android:id="@+id/subtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingExtra="2dp"
+        android:text="@string/enter_your_email_to_sign_up_for_this_app"
+        android:fontFamily="@font/roboto_r"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+    <!-- Email Input -->
+    <EditText
+        android:id="@+id/emailInput"
+        android:layout_width="327dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="24dp"
+        android:autofillHints=""
+        android:background="@drawable/input_background"
+        android:hint="@string/email_domain_com"
+        android:fontFamily="@font/roboto_r"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#000000"
+        android:textColorHint="#828282"
+        android:textSize="14sp"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitleText" />
+
+    <!-- Sign Up + Login Buttons -->
+    <LinearLayout
+        android:id="@+id/authButtonsLayout"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailInput">
+
+        <!-- Sign Up Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signUpButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/black_3d_button"
+            android:elevation="6dp"
+            android:stateListAnimator="@null"
+            android:text="@string/sign_up"
+            android:fontFamily="@font/roboto"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null" />
+
+        <!-- Login Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/black_3d_button"
+            android:elevation="6dp"
+            android:fontFamily="@font/roboto"
+            android:stateListAnimator="@null"
+            android:text="@string/login"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
+
+    <!-- OR Divider -->
+    <LinearLayout
+        android:id="@+id/orDividerLayout"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/authButtonsLayout">
+
+        <!-- Left Line -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#E6E6E6" />
+
+        <!-- OR Text -->
+        <TextView
+            android:id="@+id/orText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/roboto"
+            android:text="@string/or"
+            android:textAlignment="center"
+            android:textColor="#DADADA"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Right Line -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#E6E6E6" />
+
+    </LinearLayout>
+
+    <!-- Continue As Guest Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/continueAsGuestButton"
+        android:layout_width="327dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/black_3d_button"
+        android:elevation="6dp"
+        android:fontFamily="@font/roboto"
+        android:stateListAnimator="@null"
+        android:text="@string/continue_as_guest"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orDividerLayout" />
+
+    <!-- OR Divider -->
+    <LinearLayout
+        android:id="@+id/orDividerLayout2"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/continueAsGuestButton">
+
+        <!-- Left Line -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#E6E6E6" />
+
+        <!-- OR Text -->
+        <TextView
+            android:id="@+id/orText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/roboto"
+            android:text="@string/or"
+            android:textAlignment="center"
+            android:textColor="#DADADA"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Right Line -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#E6E6E6" />
+
+    </LinearLayout>
+
+    <!-- Social Button Container -->
+    <LinearLayout
+        android:id="@+id/socialButtonLayout"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orDividerLayout2">
+
+        <!-- Google Button -->
+        <LinearLayout
+            android:id="@+id/googleButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/social_button_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Google Logo -->
+            <ImageView
+                android:id="@+id/googleLogo"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/logo_google"
+                android:contentDescription="@string/google_logo" />
+
+            <TextView
+                android:id="@+id/googleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/continue_with_google"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Terms Layout-->
+    <LinearLayout
+        android:id="@+id/Terms"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/socialButtonLayout">
+
+        <!-- "By clicking continue, you agree to our" Text-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_r"
+            android:text="@string/by_clicking_continue_you_agree_to_our"
+            android:textColor="#DADADA"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <!-- "Terms of Service" Text-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terms_of_service"
+            android:fontFamily="@font/roboto"
+            android:paddingStart="4dp"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <!-- Policy Layout-->
+    <LinearLayout
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Terms">
+
+        <!-- "and" Text-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/and"
+            android:fontFamily="@font/roboto_r"
+            android:textColor="#DADADA"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <!-- "Privacy Policy" Text-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/privacy_policy"
+            android:paddingStart="4dp"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background3"
+    android:fitsSystemWindows="true"
+    tools:context=".view.PagesActivities.PersonalSwipeActivity">
+
+    <!-- LOGO -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="280dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="52dp"
+        android:contentDescription="@string/moviedateslogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_movie_dates" />
+
+    <!-- TITLE -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/help_us_determine_what_you_like"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView" />
+
+    <TextView
+        android:id="@+id/swipeUpHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/swipe_up_to_skip"
+        android:textColor="#9A92A8"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText" />
+
+    <!-- FAKE BACK CARD — declared FIRST so it's behind -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/backCardPreview"
+        android:layout_width="315dp"
+        android:layout_height="465dp"
+        android:layout_marginTop="0dp"
+        android:rotation="-7"
+        android:translationX="18dp"
+        android:translationY="10dp"
+        android:elevation="2dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#00000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/swipeUpHint">
+
+        <ImageView
+            android:id="@+id/backCardPoster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- CARD STACK — declared SECOND so it's in front, higher elevation -->
+    <com.yuyakaido.android.cardstackview.CardStackView
+        android:id="@+id/cardStackView"
+        android:layout_width="315dp"
+        android:layout_height="465dp"
+        android:layout_marginTop="10dp"
+        android:elevation="8dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/swipeUpHint"/>
+
+    <!-- BUTTON BAR -->
+    <LinearLayout
+        android:id="@+id/swipeButtons"
+        android:layout_width="255dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/rectangle2"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="18dp"
+        app:layout_constraintBottom_toTopOf="@id/swipeText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardStackView">
+
+        <TextView
+            android:id="@+id/mehButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/left_arrow"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:fontFamily="@font/roboto"
+            android:text="@string/meh"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="@string/loved"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/loveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="@string/right_arrow"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- INSTRUCTION -->
+    <TextView
+        android:id="@+id/swipeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/swipe_right_or_left"
+        android:textColor="#9A92A8"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/swipeButtons" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

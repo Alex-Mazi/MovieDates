@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">MovieDates</string>
+    <string name="moviedateslogo">MovieDatesLogo</string>
+    <string name="create_an_account_or_continue_as_guest">Create an account or continue as guest</string>
+    <string name="enter_your_email_to_sign_up_for_this_app">Enter your email to sign up for this app</string>
+    <string name="email_domain_com">email@domain.com</string>
+    <string name="sign_up">Sign up</string>
+    <string name="or">or</string>
+    <string name="continue_as_guest">Continue as guest</string>
+    <string name="google_logo">Google Logo</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="terms_text">
+        <![CDATA[
+        <font color="#DADADA">By clicking continue, you agree to our </font>
+        <font color="#000000">Terms of Service</font>
+        <font color="#DADADA"> and </font>
+        <font color="#000000">Privacy Policy</font>
+        ]]>
+    </string>
+    <string name="privacy_policy"> Privacy Policy</string>
+    <string name="and">and </string>
+    <string name="terms_of_service"> Terms of Service</string>
+    <string name="by_clicking_continue_you_agree_to_our">By clicking continue, you agree to our </string>
+    <string name="login">Login</string>
+    <string name="by_clicking_sign_up_you_agree_to_our">By clicking sign up, you agree to our </string>
+    <string name="sign_up_to_create_an_account">Sign up to create an account</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="login_to_your_account">Login to your account</string>
+    <string name="join_a_room">Join a room</string>
+    <string name="nickname">Nickname</string>
+    <string name="enter_room_code_e_g_jo1rm">Enter room code (e.g. JO1NRM)</string>
+    <string name="create_or_join_a_room">Create or join a room</string>
+    <string name="create_a_room">Create a room</string>
+    <string name="help_us_determine_what_you_like">Help us determine what you like</string>
+    <string name="next">Next</string>
+    <string name="western">WESTERN</string>
+    <string name="war">WAR</string>
+    <string name="thriller">THRILLER</string>
+    <string name="sci_fi">SCI-FI</string>
+    <string name="romance">ROMANCE</string>
+    <string name="mystery">MYSTERY</string>
+    <string name="music">MUSIC</string>
+    <string name="horror">HORROR</string>
+    <string name="history">HISTORY</string>
+    <string name="fantasy">FANTASY</string>
+    <string name="family">FAMILY</string>
+    <string name="drama">DRAMA</string>
+    <string name="documentary">DOCUMENTARY</string>
+    <string name="crime">CRIME</string>
+    <string name="comedy">COMEDY</string>
+    <string name="animation">ANIMATION</string>
+    <string name="adventure">ADVENTURE</string>
+    <string name="action">ACTION</string>
+    <string name="left_arrow">❮</string>
+    <string name="meh">Meh...</string>
+    <string name="loved">Loved!</string>
+    <string name="right_arrow">❯</string>
+    <string name="swipe_right_or_left">Swipe right or left</string>
+    <string name="swipe_up_to_skip">Swipe up to skip</string>
+    <string name="i_d_like_that">I\'d like that</string>
+    <string name="not_today">Not today</string>
+    <string name="available_to_rent_or_buy">Available to rent or buy</string>
+    <string name="it_s_a_match">It\'s a match!</string>
+</resources>

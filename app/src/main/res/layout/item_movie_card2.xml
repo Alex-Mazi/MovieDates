@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="315dp"
+    android:layout_height="465dp"
+    android:layout_gravity="center"
+
+    android:clipChildren="false"
+    android:clipToPadding="false"
+
+    app:cardCornerRadius="28dp"
+    app:cardElevation="12dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#30FFFFFF"
+    app:cardBackgroundColor="#00000000">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- POSTER -->
+        <ImageView
+            android:id="@+id/moviePoster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+        <!-- LIGHT OVERLAY -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#33000000" />
+
+        <!-- BOTTOM GRADIENT -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rectangle1" />
+
+        <!-- TITLE -->
+        <TextView
+            android:id="@+id/movieTitle"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="58dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="2"
+            android:shadowColor="#AA000000"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="6"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- YEAR + RUNTIME -->
+        <TextView
+            android:id="@+id/movieInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="40dp"
+            android:fontFamily="@font/roboto"
+            android:textColor="#321D4B"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/movieTitle"/>
+
+        <!-- GENRES -->
+        <TextView
+            android:id="@+id/movieGenres"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="24dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto"
+            android:maxLines="1"
+            android:textColor="#9B9797"
+            android:textSize="13sp"
+            app:layout_constraintTop_toBottomOf="@id/movieInfo"/>
+
+        <!-- RATING CIRCLE -->
+        <FrameLayout
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="22dp">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/ratingProgress"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:indeterminate="false"
+                android:max="100"
+                app:indicatorColor="#00E676"
+                app:trackColor="#55333333"
+                app:indicatorSize="56dp"
+                app:indicatorInset="0dp"
+                app:trackThickness="5dp"/>
+
+            <TextView
+                android:id="@+id/ratingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto"
+                android:text="85%"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>
+
