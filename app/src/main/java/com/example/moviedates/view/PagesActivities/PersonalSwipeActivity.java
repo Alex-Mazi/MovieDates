@@ -1,39 +1,58 @@
 package com.example.moviedates.view.PagesActivities;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.content.Intent;
-import androidx.appcompat.app.AlertDialog;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.moviedates.R;
-import com.google.android.material.card.MaterialCardView;
+import com.example.moviedates.network.ApiClient;
+import com.example.moviedates.network.ApiService;
+import com.example.moviedates.network.model.MovieDTO;
+import com.example.moviedates.network.model.SoloSwipeRequest;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
 import com.yuyakaido.android.cardstackview.Direction;
-import com.yuyakaido.android.cardstackview.StackFrom;
 import com.yuyakaido.android.cardstackview.Duration;
+import com.yuyakaido.android.cardstackview.StackFrom;
 import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PersonalSwipeActivity extends AppCompatActivity {
 
-    private CardStackView cardStackView;
-    private CardStackLayoutManager layoutManager;
-    private ImageView backCardPoster;
+    private static final String TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
-    private final List<MovieModel> movies = new ArrayList<>();
+    private CardStackView cardStackView;
+    private ImageView backCardPoster;
+    private MovieAdapter adapter;
+
+    private final List<MovieDTO> movies = new ArrayList<>();
+    private long userId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,67 +61,50 @@ public class PersonalSwipeActivity extends AppCompatActivity {
 
         cardStackView = findViewById(R.id.cardStackView);
         backCardPoster = findViewById(R.id.backCardPoster);
-
         TextView mehButton = findViewById(R.id.mehButton);
         TextView loveButton = findViewById(R.id.loveButton);
 
-        loadMovies();
+        userId = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getLong("user_id", -1);
 
-        if (movies.size() > 1) {backCardPoster.setImageResource(movies.get(1).poster);}
+        setupCardStack();
+        fetchSoloDeck();
 
-        layoutManager = new CardStackLayoutManager(this, new CardStackListener() {
+        mehButton.setOnClickListener(v -> swipe(Direction.Left));
+        loveButton.setOnClickListener(v -> swipe(Direction.Right));
+    }
+
+    private void setupCardStack() {
+        CardStackLayoutManager layoutManager = new CardStackLayoutManager(this, new CardStackListener() {
             @Override
             public void onCardDragging(Direction direction, float ratio) {}
 
             @Override
             public void onCardSwiped(Direction direction) {
+                int swipedPosition = layoutManager().getTopPosition() - 1;
 
-                if (direction == Direction.Left) {
-                    // Meh
-                } else if (direction == Direction.Right) {
-                    // Loved
-                } else if (direction == Direction.Top) {
-                    // Skipped
+                if (swipedPosition >= 0 && swipedPosition < movies.size()) {
+                    MovieDTO swipedMovie = movies.get(swipedPosition);
+                    boolean accepted = direction == Direction.Right;
+                    postSoloSwipe(swipedMovie.getId(), accepted);
                 }
 
-                int topPosition = layoutManager.getTopPosition();
-
-                int backIndex = topPosition + 1;
-
-                if (backIndex < movies.size()) {
-
+                int nextBack = layoutManager().getTopPosition() + 1;
+                if (nextBack < movies.size()) {
                     backCardPoster.setVisibility(View.VISIBLE);
-
-                    backCardPoster.setImageResource(movies.get(backIndex).poster);
-
+                    Glide.with(PersonalSwipeActivity.this).load(TMDB_IMAGE_BASE + movies.get(nextBack).getPosterPath()).placeholder(new ColorDrawable(Color.TRANSPARENT)).transition(DrawableTransitionOptions.withCrossFade()).into(backCardPoster);
                 } else {
-
                     backCardPoster.setVisibility(View.INVISIBLE);
                 }
 
-                if (topPosition == movies.size()) {
-
-                    new AlertDialog.Builder(PersonalSwipeActivity.this).setTitle("Thank You").setMessage("Thank you for your input.").setCancelable(false)
-                            .setPositiveButton("Continue", (dialog, which) -> {
-                                // Move to RoomActivity
-                                Intent intent = new Intent(PersonalSwipeActivity.this, RoomActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }).show();
+                if (layoutManager().getTopPosition() == movies.size()) {
+                    showDoneDialog();
                 }
             }
 
-            @Override
-            public void onCardRewound() {}
-
-            @Override
-            public void onCardCanceled() {}
-
-            @Override
-            public void onCardAppeared(View view, int position) {}
-
-            @Override
-            public void onCardDisappeared(View view, int position) {}
+            @Override public void onCardRewound() {}
+            @Override public void onCardCanceled() {}
+            @Override public void onCardAppeared(View view, int position) {}
+            @Override public void onCardDisappeared(View view, int position) {}
         });
 
         layoutManager.setStackFrom(StackFrom.None);
@@ -116,49 +118,100 @@ public class PersonalSwipeActivity extends AppCompatActivity {
         layoutManager.setDirections(Arrays.asList(Direction.Left, Direction.Right, Direction.Top));
 
         cardStackView.setLayoutManager(layoutManager);
-
-        // ADAPTER
-        MovieAdapter adapter = new MovieAdapter(movies);
+        adapter = new MovieAdapter(movies);
         cardStackView.setAdapter(adapter);
-
-        // LEFT BUTTON
-        mehButton.setOnClickListener(v -> {
-            SwipeAnimationSetting setting = new SwipeAnimationSetting.Builder().setDirection(Direction.Left).setDuration(Duration.Normal.duration).build();
-            layoutManager.setSwipeAnimationSetting(setting);
-            cardStackView.swipe();
-        });
-
-        // RIGHT BUTTON
-        loveButton.setOnClickListener(v -> {
-            SwipeAnimationSetting setting = new SwipeAnimationSetting.Builder().setDirection(Direction.Right).setDuration(Duration.Normal.duration).build();
-            layoutManager.setSwipeAnimationSetting(setting);
-            cardStackView.swipe();
-        });
     }
 
-    private void loadMovies() {
-        movies.add(new MovieModel(R.drawable.p33156_p_v8_aq1, "The Lord Of The Rings: The Return Of The King"));
-        movies.add(new MovieModel(R.drawable.genre_action, "Mad Max: Fury Road"));
-        movies.add(new MovieModel(R.drawable.genre_comedy, "The Hangover"));
-        movies.add(new MovieModel(R.drawable.genre_horror, "The Conjuring"));
+    private CardStackLayoutManager layoutManager() {
+        return (CardStackLayoutManager) cardStackView.getLayoutManager();
     }
 
-    static class MovieModel {
-        int poster;
-        String title;
-
-        MovieModel(int poster, String title) {
-            this.poster = poster;
-            this.title = title;
+    private void fetchSoloDeck() {
+        if (userId == -1) {
+            Toast.makeText(this, "Session error. Please log in again.", Toast.LENGTH_LONG).show();
+            return;
         }
+
+        ApiClient.getInstance(this).create(ApiService.class)
+                .getSoloDeck(userId)
+                .enqueue(new Callback<Map<String, Object>>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<?> raw = (List<?>) response.body().get("results");
+                            if (raw != null) {
+                                movies.clear();
+                                for (Object item : raw) {
+                                    if (item instanceof Map) {
+                                        Map<?, ?> map = (Map<?, ?>) item;
+                                        MovieDTO dto = new MovieDTO();
+                                        dto.setId(((Double) map.get("id")).intValue());
+                                        dto.setTitle((String) map.get("title"));
+                                        dto.setPosterPath((String) map.get("poster_path"));
+                                        movies.add(dto);
+                                    }
+                                }
+                                adapter.notifyDataSetChanged();
+                                if (movies.size() > 1) {
+                                    backCardPoster.setVisibility(View.VISIBLE);
+                                    Glide.with(PersonalSwipeActivity.this).load(TMDB_IMAGE_BASE + movies.get(1).getPosterPath()).placeholder(new ColorDrawable(Color.TRANSPARENT)).transition(DrawableTransitionOptions.withCrossFade()).into(backCardPoster);
+                                }
+                            }
+                        } else {
+                            Toast.makeText(PersonalSwipeActivity.this, "Failed to load movies", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
+                        Toast.makeText(PersonalSwipeActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void postSoloSwipe(int movieId, boolean accepted) {
+        if (userId == -1) return;
+
+        ApiClient.getInstance(this).create(ApiService.class)
+                .postSoloSwipe(userId, new SoloSwipeRequest(movieId, accepted))
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                        if (!response.isSuccessful()) {
+                            Log.w("PersonalSwipe", "Solo swipe post failed: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        Log.e("PersonalSwipe", "Solo swipe error: " + t.getMessage());
+                    }
+                });
+    }
+
+    private void swipe(Direction direction) {
+        SwipeAnimationSetting setting = new SwipeAnimationSetting.Builder().setDirection(direction).setDuration(Duration.Normal.duration).build();
+        layoutManager().setSwipeAnimationSetting(setting);
+        cardStackView.swipe();
+    }
+
+    private void showDoneDialog() {
+        new AlertDialog.Builder(this).setTitle("Thank You").setMessage("Thank you for your input.").setCancelable(false)
+                .setPositiveButton("Continue", (dialog, which) -> {
+                    startActivity(new Intent(PersonalSwipeActivity.this, RoomActivity.class));
+                    finish();
+                }).show();
     }
 
     // ADAPTER
     static class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-        List<MovieModel> movieList;
+        private final List<MovieDTO> movieList;
 
-        MovieAdapter(List<MovieModel> movieList) { this.movieList = movieList; }
+        MovieAdapter(List<MovieDTO> movieList) {
+            this.movieList = movieList;
+        }
 
         @NonNull
         @Override
@@ -169,9 +222,9 @@ public class PersonalSwipeActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-            MovieModel movie = movieList.get(position);
-            holder.moviePoster.setImageResource(movie.poster);
-            holder.movieTitle.setText(movie.title);
+            MovieDTO movie = movieList.get(position);
+            holder.movieTitle.setText(movie.getTitle());
+            Glide.with(holder.moviePoster.getContext()).load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath()).placeholder(new ColorDrawable(Color.TRANSPARENT)).transition(DrawableTransitionOptions.withCrossFade()).into(holder.moviePoster);
         }
 
         @Override
@@ -180,17 +233,12 @@ public class PersonalSwipeActivity extends AppCompatActivity {
         static class MovieViewHolder extends RecyclerView.ViewHolder {
             ImageView moviePoster;
             TextView movieTitle;
-            MaterialCardView cardView;
 
             public MovieViewHolder(@NonNull View itemView) {
                 super(itemView);
                 moviePoster = itemView.findViewById(R.id.moviePoster);
                 movieTitle = itemView.findViewById(R.id.movieTitle);
-                cardView = (MaterialCardView) itemView;
             }
-
         }
-
     }
-
 }

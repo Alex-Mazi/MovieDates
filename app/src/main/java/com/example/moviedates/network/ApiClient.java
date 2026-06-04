@@ -10,10 +10,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.concurrent.TimeUnit;
+import com.example.moviedates.BuildConfig;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://10.0.2.2:8080/";
+    private static final String BASE_URL = BuildConfig.BASE_URL;
 
     private static Retrofit instance = null;
 
