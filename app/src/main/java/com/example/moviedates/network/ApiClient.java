@@ -21,7 +21,7 @@ public class ApiClient {
     private ApiClient() {}
 
     public static synchronized Retrofit getInstance(Context context) {
-        if (instance == null) {instance = buildRetrofit(context.getApplicationContext());}
+        if (instance == null) { instance = buildRetrofit(context.getApplicationContext()); }
         return instance;
     }
 
@@ -36,6 +36,7 @@ public class ApiClient {
 
         OkHttpClient httpClient = new OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS).writeTimeout(15, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
+
                     SharedPreferences prefs = appContext.getSharedPreferences("moviedates_prefs", Context.MODE_PRIVATE);
                     String token = prefs.getString("jwt_token", null);
 
@@ -45,8 +46,11 @@ public class ApiClient {
                     if (token != null && !token.isEmpty()) {builder.header("Authorization", "Bearer " + token);}
 
                     return chain.proceed(builder.build());
+
                 }).addInterceptor(logging).build();
 
         return new Retrofit.Builder().baseUrl(BASE_URL).client(httpClient).addConverterFactory(GsonConverterFactory.create()).build();
+
     }
+
 }

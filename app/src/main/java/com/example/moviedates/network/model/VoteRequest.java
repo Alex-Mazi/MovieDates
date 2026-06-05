@@ -17,4 +17,5 @@ public class VoteRequest {
     public Long getUserId() { return userId; }
     public Integer getMovieId() { return movieId; }
     public boolean isAccepted() { return accepted; }
+
 }

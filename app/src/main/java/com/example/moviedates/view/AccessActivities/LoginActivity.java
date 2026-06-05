@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
@@ -40,9 +41,11 @@ public class LoginActivity extends AppCompatActivity {
         if (email != null) emailInput.setText(email);
 
         loginButton.setOnClickListener(v -> attemptLogin());
+
     }
 
     private void attemptLogin() {
+
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
 
@@ -66,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
+
                         setLoadingState(false);
 
                         if (response.isSuccessful() && response.body() != null) {
@@ -85,10 +89,13 @@ public class LoginActivity extends AppCompatActivity {
                         setLoadingState(false);
                         Toast.makeText(LoginActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
+
                 });
+
     }
 
     private void saveTokenAndProceed(String token, long userId) {
+
         SharedPreferences.Editor prefs = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).edit();
         prefs.putString("jwt_token", token);
         prefs.putLong("user_id", userId);
@@ -97,12 +104,16 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, RoomActivity.class));
         finish();
+
     }
 
     private void setLoadingState(boolean loading) {
+
         loginButton.setEnabled(!loading);
         loginButton.setText(loading ? "Logging in…" : "Log In");
         emailInput.setEnabled(!loading);
         passwordInput.setEnabled(!loading);
+
     }
+
 }

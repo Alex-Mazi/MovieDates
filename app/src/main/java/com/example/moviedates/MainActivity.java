@@ -57,21 +57,27 @@ public class MainActivity extends AppCompatActivity {
         continueAsGuestButton.setOnClickListener(v -> navigateTo(GuestActivity.class, null));
 
         googleButton.setOnClickListener(v -> Toast.makeText(this, "Google Sign-In — coming soon", Toast.LENGTH_SHORT).show());
+
     }
 
     private String getValidatedEmail() {
+
         String email = emailInput.getText().toString().trim();
+
         if (email.isEmpty()) {
             emailInput.setError("Please enter an email");
             emailInput.requestFocus();
             return null;
         }
+
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError("Please enter a valid email");
             emailInput.requestFocus();
             return null;
         }
+
         return email;
+
     }
 
     private void navigateTo(Class<?> target, String email) {
@@ -79,4 +85,5 @@ public class MainActivity extends AppCompatActivity {
         if (email != null) intent.putExtra("email", email);
         startActivity(intent);
     }
+
 }

@@ -30,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
 
@@ -42,39 +43,45 @@ public class SignUpActivity extends AppCompatActivity {
         if (email != null) emailInput.setText(email);
 
         signUpButton.setOnClickListener(v -> attemptSignUp());
+
     }
 
     private void attemptSignUp() {
+
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
         String confirm  = confirmInput.getText().toString().trim();
 
-        // Validation
         if (email.isEmpty()) {
             emailInput.setError("Please enter an email");
             emailInput.requestFocus();
             return;
         }
+
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError("Please enter a valid email");
             emailInput.requestFocus();
             return;
         }
+
         if (password.isEmpty()) {
             passwordInput.setError("Please enter a password");
             passwordInput.requestFocus();
             return;
         }
+
         if (password.length() < 8) {
             passwordInput.setError("Password must be at least 8 characters");
             passwordInput.requestFocus();
             return;
         }
+
         if (confirm.isEmpty()) {
             confirmInput.setError("Please confirm your password");
             confirmInput.requestFocus();
             return;
         }
+
         if (!password.equals(confirm)) {
             confirmInput.setError("Passwords do not match");
             confirmInput.requestFocus();
@@ -87,11 +94,13 @@ public class SignUpActivity extends AppCompatActivity {
         setLoadingState(true);
 
         ApiService api = ApiClient.getInstance(this).create(ApiService.class);
+
         api.register(new AuthRequest(email, password, displayName))
                 .enqueue(new Callback<AuthResponse>() {
 
                     @Override
                     public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
+
                         setLoadingState(false);
 
                         if (response.isSuccessful() && response.body() != null) {
@@ -99,7 +108,7 @@ public class SignUpActivity extends AppCompatActivity {
                             return;
                         }
 
-                        // 500 with "Email already exists" → send them to login
+                        // "Email already exists" : send them to login
                         if (response.code() == 500) {
                             Toast.makeText(SignUpActivity.this, "This email is already registered. Please log in.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
@@ -108,6 +117,7 @@ public class SignUpActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(SignUpActivity.this, "Sign-up failed (" + response.code() + "). Please try again.", Toast.LENGTH_LONG).show();
                         }
+
                     }
 
                     @Override
@@ -115,10 +125,13 @@ public class SignUpActivity extends AppCompatActivity {
                         setLoadingState(false);
                         Toast.makeText(SignUpActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
+
                 });
+
     }
 
     private void saveTokenAndProceed(String token, long userId) {
+
         SharedPreferences.Editor prefs = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).edit();
         prefs.putString("jwt_token", token);
         prefs.putLong("user_id", userId);
@@ -127,13 +140,17 @@ public class SignUpActivity extends AppCompatActivity {
         Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, GenresActivity.class));
         finish();
+
     }
 
     private void setLoadingState(boolean loading) {
+
         signUpButton.setEnabled(!loading);
         signUpButton.setText(loading ? "Creating account…" : "Sign Up");
         emailInput.setEnabled(!loading);
         passwordInput.setEnabled(!loading);
         confirmInput.setEnabled(!loading);
+
     }
+
 }

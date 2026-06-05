@@ -30,7 +30,6 @@ public interface ApiService {
     @POST("api/auth/guest")
     Call<AuthResponse> registerGuest(@Body Map<String, String> request);
 
-    // Sessions
     @POST("api/sessions/create")
     Call<SessionResponse> createRoom();
 
@@ -43,7 +42,6 @@ public interface ApiService {
     @GET("api/sessions/{code}/deck")
     Call<List<MovieDTO>> getDeck(@Path("code") String code);
 
-    // Votes
     @POST("api/votes")
     Call<Map<String, Object>> submitVote(@Body VoteRequest body);
 
@@ -64,4 +62,5 @@ public interface ApiService {
 
     @POST("api/users/{id}/solo-swipe")
     Call<Void> postSoloSwipe(@Path("id") long userId, @Body SoloSwipeRequest body);
+
 }

@@ -2,7 +2,6 @@ package com.example.moviedates.view.PagesActivities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -56,6 +55,7 @@ public class PersonalSwipeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.personal_swipe);
 
@@ -71,15 +71,18 @@ public class PersonalSwipeActivity extends AppCompatActivity {
 
         mehButton.setOnClickListener(v -> swipe(Direction.Left));
         loveButton.setOnClickListener(v -> swipe(Direction.Right));
+
     }
 
     private void setupCardStack() {
+
         CardStackLayoutManager layoutManager = new CardStackLayoutManager(this, new CardStackListener() {
             @Override
-            public void onCardDragging(Direction direction, float ratio) {}
+            public void onCardDragging(Direction direction, float ratio) { }
 
             @Override
             public void onCardSwiped(Direction direction) {
+
                 int swipedPosition = layoutManager().getTopPosition() - 1;
 
                 if (swipedPosition >= 0 && swipedPosition < movies.size()) {
@@ -89,6 +92,7 @@ public class PersonalSwipeActivity extends AppCompatActivity {
                 }
 
                 int nextBack = layoutManager().getTopPosition() + 1;
+
                 if (nextBack < movies.size()) {
                     backCardPoster.setVisibility(View.VISIBLE);
                     Glide.with(PersonalSwipeActivity.this).load(TMDB_IMAGE_BASE + movies.get(nextBack).getPosterPath()).placeholder(new ColorDrawable(Color.TRANSPARENT)).transition(DrawableTransitionOptions.withCrossFade()).into(backCardPoster);
@@ -96,15 +100,13 @@ public class PersonalSwipeActivity extends AppCompatActivity {
                     backCardPoster.setVisibility(View.INVISIBLE);
                 }
 
-                if (layoutManager().getTopPosition() == movies.size()) {
-                    showDoneDialog();
-                }
+                if (layoutManager().getTopPosition() == movies.size()) { showDoneDialog(); }
             }
 
-            @Override public void onCardRewound() {}
-            @Override public void onCardCanceled() {}
-            @Override public void onCardAppeared(View view, int position) {}
-            @Override public void onCardDisappeared(View view, int position) {}
+            @Override public void onCardRewound() { }
+            @Override public void onCardCanceled() { }
+            @Override public void onCardAppeared(View view, int position) { }
+            @Override public void onCardDisappeared(View view, int position) { }
         });
 
         layoutManager.setStackFrom(StackFrom.None);
@@ -122,26 +124,30 @@ public class PersonalSwipeActivity extends AppCompatActivity {
         cardStackView.setAdapter(adapter);
     }
 
-    private CardStackLayoutManager layoutManager() {
-        return (CardStackLayoutManager) cardStackView.getLayoutManager();
-    }
+    private CardStackLayoutManager layoutManager() { return (CardStackLayoutManager) cardStackView.getLayoutManager(); }
 
     private void fetchSoloDeck() {
+
         if (userId == -1) {
             Toast.makeText(this, "Session error. Please log in again.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        ApiClient.getInstance(this).create(ApiService.class)
-                .getSoloDeck(userId)
+        ApiClient.getInstance(this).create(ApiService.class).getSoloDeck(userId)
                 .enqueue(new Callback<Map<String, Object>>() {
+
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
+
                         if (response.isSuccessful() && response.body() != null) {
+
                             List<?> raw = (List<?>) response.body().get("results");
+
                             if (raw != null) {
+
                                 movies.clear();
+
                                 for (Object item : raw) {
                                     if (item instanceof Map) {
                                         Map<?, ?> map = (Map<?, ?>) item;
@@ -152,42 +158,45 @@ public class PersonalSwipeActivity extends AppCompatActivity {
                                         movies.add(dto);
                                     }
                                 }
+
                                 adapter.notifyDataSetChanged();
+
                                 if (movies.size() > 1) {
                                     backCardPoster.setVisibility(View.VISIBLE);
                                     Glide.with(PersonalSwipeActivity.this).load(TMDB_IMAGE_BASE + movies.get(1).getPosterPath()).placeholder(new ColorDrawable(Color.TRANSPARENT)).transition(DrawableTransitionOptions.withCrossFade()).into(backCardPoster);
                                 }
+
                             }
+
                         } else {
                             Toast.makeText(PersonalSwipeActivity.this, "Failed to load movies", Toast.LENGTH_SHORT).show();
                         }
+
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
-                        Toast.makeText(PersonalSwipeActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                    public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) { Toast.makeText(PersonalSwipeActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show(); }
+
                 });
     }
 
     private void postSoloSwipe(int movieId, boolean accepted) {
+
         if (userId == -1) return;
 
-        ApiClient.getInstance(this).create(ApiService.class)
-                .postSoloSwipe(userId, new SoloSwipeRequest(movieId, accepted))
+        ApiClient.getInstance(this).create(ApiService.class).postSoloSwipe(userId, new SoloSwipeRequest(movieId, accepted))
                 .enqueue(new Callback<Void>() {
+
                     @Override
                     public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                        if (!response.isSuccessful()) {
-                            Log.w("PersonalSwipe", "Solo swipe post failed: " + response.code());
-                        }
+                        if (!response.isSuccessful()) { Log.w("PersonalSwipe", "Solo swipe post failed: " + response.code()); }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                        Log.e("PersonalSwipe", "Solo swipe error: " + t.getMessage());
-                    }
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) { Log.e("PersonalSwipe", "Solo swipe error: " + t.getMessage()); }
+
                 });
+
     }
 
     private void swipe(Direction direction) {
@@ -204,7 +213,6 @@ public class PersonalSwipeActivity extends AppCompatActivity {
                 }).show();
     }
 
-    // ADAPTER
     static class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
         private final List<MovieDTO> movieList;

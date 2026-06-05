@@ -11,4 +11,5 @@ public class SoloSwipeRequest {
 
     public int getMovieId() { return movieId; }
     public boolean isAccepted() { return accepted; }
+
 }

@@ -60,6 +60,7 @@ public class GenresActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.genres);
 
@@ -76,18 +77,26 @@ public class GenresActivity extends AppCompatActivity {
         });
 
         fetchGenres();
+
     }
 
     private void fetchGenres() {
+
         ApiClient.getInstance(this).create(ApiService.class)
                 .getGenres()
                 .enqueue(new Callback<Map<String, Object>>() {
+
                     @Override
                     public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
+
                         if (response.isSuccessful() && response.body() != null) {
+
                             List<?> genres = (List<?>) response.body().get("genres");
+
                             if (genres != null) {
+
                                 genreGrid.removeAllViews();
+
                                 for (Object item : genres) {
                                     if (item instanceof Map) {
                                         Map<?, ?> genre = (Map<?, ?>) item;
@@ -97,20 +106,26 @@ public class GenresActivity extends AppCompatActivity {
                                         if (drawable != null) {addGenreCard(id, name, drawable);}
                                     }
                                 }
+
                             }
+
                         } else {
                             Toast.makeText(GenresActivity.this, "Failed to load genres", Toast.LENGTH_SHORT).show();
                         }
+
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                         Toast.makeText(GenresActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+
                 });
+
     }
 
     private void addGenreCard(int genreId, String genreName, int drawableRes) {
+
         float dp = getResources().getDisplayMetrics().density;
 
         MaterialCardView card = new MaterialCardView(this);
@@ -140,10 +155,13 @@ public class GenresActivity extends AppCompatActivity {
 
         card.setTag(false);
         card.setStrokeWidth(0);
+
         card.setOnClickListener(v -> {
+
             boolean selected = (boolean) card.getTag();
             selected = !selected;
             card.setTag(selected);
+
             if (selected) {
                 selectedGenresCount++;
                 selectedGenreIds.add(genreId);
@@ -158,15 +176,19 @@ public class GenresActivity extends AppCompatActivity {
                 card.setCardElevation(6f);
                 card.animate().scaleX(1f).scaleY(1f).setDuration(150).start();
             }
+
             updateNextButton();
+
         });
 
         genreCards.add(card);
         genreGrid.addView(card);
+
     }
 
     @SuppressLint("SetTextI18n")
     private void saveGenres(MaterialButton nextButton) {
+
         SharedPreferences prefs = getSharedPreferences("moviedates_prefs", MODE_PRIVATE);
         long userId = prefs.getLong("user_id", -1);
 
@@ -180,10 +202,13 @@ public class GenresActivity extends AppCompatActivity {
 
         ApiClient.getInstance(this).create(ApiService.class).updateGenres(userId, selectedGenreIds)
                 .enqueue(new Callback<AuthResponse.UserPayload>() {
+
                     @Override
                     public void onResponse(@NonNull Call<AuthResponse.UserPayload> call, @NonNull Response<AuthResponse.UserPayload> response) {
+
                         nextButton.setEnabled(true);
                         nextButton.setText("Next");
+
                         if (response.isSuccessful()) {
                             Intent intent = new Intent(GenresActivity.this, PersonalSwipeActivity.class);
                             intent.putIntegerArrayListExtra("genreIds", new ArrayList<>(selectedGenreIds));
@@ -192,6 +217,7 @@ public class GenresActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(GenresActivity.this, "Failed to save genres (" + response.code() + ")", Toast.LENGTH_SHORT).show();
                         }
+
                     }
 
                     @Override
@@ -200,17 +226,24 @@ public class GenresActivity extends AppCompatActivity {
                         nextButton.setText("Next");
                         Toast.makeText(GenresActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+
                 });
+
     }
 
     private void updateNextButton() {
+
         float alpha;
+
         switch (selectedGenresCount) {
             case 0: alpha = 0.35f; break;
             case 1: alpha = 0.55f; break;
             case 2: alpha = 0.75f; break;
             default: alpha = 1.0f; break;
         }
+
         nextButton.animate().alpha(alpha).setDuration(150).start();
+
     }
+
 }
