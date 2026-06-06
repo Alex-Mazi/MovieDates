@@ -62,4 +62,9 @@
     <string name="not_today">Not today</string>
     <string name="available_to_rent_or_buy">Available to rent or buy</string>
     <string name="it_s_a_match">It\'s a match!</string>
+    <string name="waiting_for_yout_friends_to_join">Waiting for yout friends to join...</string>
+    <string name="share_your_room_code_with_them_by_clicking_on_it">Share your room code with them by clicking on it!</string>
+    <string name="start_swiping">Start swiping</string>
+    <string name="line">------</string>
+    <string name="copy_room_code">Copy room code</string>
 </resources>

@@ -60,9 +60,8 @@ public class RoomActivity extends AppCompatActivity {
                         setLoadingState(false);
 
                         if (response.isSuccessful() && response.body() != null) {
-                            String code = response.body().getCode();
-                            Toast.makeText(RoomActivity.this, "Room created! Code: " + code, Toast.LENGTH_LONG).show();
-                            navigateToSwipe(code);
+                            Toast.makeText(RoomActivity.this, "Room created!", Toast.LENGTH_LONG).show();
+                            navigateToSwipe(response.body().getCode());
                         } else {
                             Toast.makeText(RoomActivity.this, "Failed to create room (" + response.code() + ")", Toast.LENGTH_LONG).show();
                         }
@@ -132,8 +131,8 @@ public class RoomActivity extends AppCompatActivity {
 
         getSharedPreferences("moviedates_prefs", MODE_PRIVATE).edit().putString("room_code", roomCode).apply();
 
-        // Goto GroupSwipeActivity
-        Intent intent = new Intent(this, GroupSwipeActivity.class);
+        // Goto CodeActivity
+        Intent intent = new Intent(this, CodeActivity.class);
         intent.putExtra("room_code", roomCode);
         startActivity(intent);
         finish();
