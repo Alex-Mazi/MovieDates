@@ -1,19 +1,25 @@
 package com.example.moviedates.view.PagesActivities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.moviedates.R;
-import com.google.android.material.card.MaterialCardView;
+import com.example.moviedates.network.ApiClient;
+import com.example.moviedates.network.ApiService;
+import com.example.moviedates.network.model.MovieDTO;
+import com.example.moviedates.network.model.VoteRequest;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
@@ -26,273 +32,283 @@ import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GroupSwipeActivity extends AppCompatActivity {
 
+    private static final String TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
+
     private CardStackView cardStackView;
-
     private CardStackLayoutManager layoutManager;
-
     private ImageView backCardPoster;
+    private MovieAdapter adapter;
 
-    private final List<MovieModel> movies = new ArrayList<>();
+    private final List<MovieDTO> movies = new ArrayList<>();
+
+    private String roomCode;
+    private long userId;
+    private long sessionId;
+    private int currentPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.group_swipe);
 
-        cardStackView = findViewById(R.id.cardStackView);
-
-        backCardPoster = findViewById(R.id.backCardPoster);
-
         TextView mehButton = findViewById(R.id.mehButton);
-
         TextView loveButton = findViewById(R.id.loveButton);
 
-        loadMovies();
+        userId = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getLong("user_id", -1);
+        sessionId = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getLong("session_id", -1);
+        roomCode  = getIntent().getStringExtra("room_code");
 
-        // INITIAL BACK CARD
-        if (movies.size() > 1) {
-
-            backCardPoster.setImageResource(movies.get(1).poster);
+        if (roomCode == null) {
+            roomCode = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getString("room_code", "");
         }
 
-        // CARD STACK
-        layoutManager = new CardStackLayoutManager(this,
-                new CardStackListener() {
+        if (roomCode.isEmpty() || userId == -1 || sessionId == -1) {
+            Toast.makeText(this, "Session data missing. Please rejoin the room.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
-                    @Override
-                    public void onCardDragging(Direction direction, float ratio) {}
+        cardStackView = findViewById(R.id.cardStackView);
+        backCardPoster = findViewById(R.id.backCardPoster);
 
-                    @Override
-                    public void onCardSwiped(Direction direction) {
+        setupCardStack();
+        loadDeck();
 
-                        int topPosition = layoutManager.getTopPosition();
+        mehButton.setOnClickListener(v -> swipe(Direction.Left));
+        loveButton.setOnClickListener(v -> swipe(Direction.Right));
+    }
 
-                        int backIndex = topPosition + 1;
+    private void setupCardStack() {
 
-                        // UPDATE BACK CARD
-                        if (backIndex < movies.size()) {
+        layoutManager = new CardStackLayoutManager(this, new CardStackListener() {
 
-                            backCardPoster.setVisibility(View.VISIBLE);
+            @Override
+            public void onCardDragging(Direction direction, float ratio) {}
 
-                            backCardPoster.setImageResource(movies.get(backIndex).poster);
+            @Override
+            public void onCardSwiped(Direction direction) {
 
-                        } else {
+                boolean liked = direction == Direction.Right;
+                submitVote(movies.get(currentPosition), liked);
 
-                            backCardPoster.setVisibility(View.INVISIBLE);
-                        }
-                    }
+                currentPosition = layoutManager.getTopPosition();
+                int backIndex = currentPosition + 1;
 
-                    @Override
-                    public void onCardRewound() {}
+                if (backIndex < movies.size()) {
+                    backCardPoster.setVisibility(View.VISIBLE);
+                    loadPoster(movies.get(backIndex).getPosterPath(), backCardPoster);
+                } else {
+                    backCardPoster.setVisibility(View.INVISIBLE);
+                }
+            }
 
-                    @Override
-                    public void onCardCanceled() {}
+            @Override public void onCardRewound() {}
+            @Override public void onCardCanceled() {}
+            @Override public void onCardAppeared(View view, int position) {}
+            @Override public void onCardDisappeared(View view, int position) {}
 
-                    @Override
-                    public void onCardAppeared(View view, int position) {}
-
-                    @Override
-                    public void onCardDisappeared(View view, int position) {}
-                });
+        });
 
         layoutManager.setStackFrom(StackFrom.None);
-
         layoutManager.setVisibleCount(1);
-
         layoutManager.setScaleInterval(0.0f);
-
         layoutManager.setTranslationInterval(0.0f);
-
         layoutManager.setMaxDegree(20.0f);
-
         layoutManager.setSwipeThreshold(0.3f);
-
         layoutManager.setCanScrollHorizontal(true);
-
         layoutManager.setCanScrollVertical(false);
-
         layoutManager.setDirections(Arrays.asList(Direction.Left, Direction.Right));
 
         cardStackView.setLayoutManager(layoutManager);
 
-        // ADAPTER
-        MovieAdapter adapter = new MovieAdapter(movies);
-
+        adapter = new MovieAdapter(movies);
         cardStackView.setAdapter(adapter);
-
-        // LEFT BUTTON
-        mehButton.setOnClickListener(v -> {
-
-            SwipeAnimationSetting setting = new SwipeAnimationSetting.Builder().setDirection(Direction.Left).setDuration(Duration.Normal.duration).build();
-
-            layoutManager.setSwipeAnimationSetting(setting);
-
-            cardStackView.swipe();
-        });
-
-        // RIGHT BUTTON
-        loveButton.setOnClickListener(v -> {
-
-            SwipeAnimationSetting setting = new SwipeAnimationSetting.Builder().setDirection(Direction.Right).setDuration(Duration.Normal.duration).build();
-
-            layoutManager.setSwipeAnimationSetting(setting);
-
-            cardStackView.swipe();
-        });
     }
 
-    // LOAD DATA
-    private void loadMovies() {
+    private void loadDeck() {
 
-        movies.add(new MovieModel(
-                R.drawable.p33156_p_v8_aq1,
-                "The Lord Of The Rings: The Return Of The King",
-                "2003",
-                "201min",
-                "Adventure, Fantasy, Action",
-                85
-        ));
+        ApiClient.getInstance(this).create(ApiService.class).getDeck(roomCode)
+                .enqueue(new Callback<List<MovieDTO>>() {
 
-        movies.add(new MovieModel(
-                R.drawable.genre_action,
-                "Mad Max: Fury Road",
-                "2015",
-                "120min",
-                "Action, Adventure",
-                97
-        ));
+                    @SuppressLint("NotifyDataSetChanged") @Override
+                    public void onResponse(@NonNull Call<List<MovieDTO>> call, @NonNull Response<List<MovieDTO>> response) {
+                        if (isDestroyed() || isFinishing()) return;
 
-        movies.add(new MovieModel(
-                R.drawable.genre_comedy,
-                "The Hangover",
-                "2009",
-                "100min",
-                "Comedy",
-                78
-        ));
+                        if (response.isSuccessful() && response.body() != null) {
 
-        movies.add(new MovieModel(
-                R.drawable.genre_horror,
-                "The Conjuring",
-                "2013",
-                "112min",
-                "Horror, Mystery",
-                84
-        ));
+                            movies.clear();
+                            for (MovieDTO movie : response.body()) {
+                                if (movie != null) movies.add(movie);
+                            }
+
+                            if (movies.isEmpty()) {
+                                Toast.makeText(GroupSwipeActivity.this, "No movies available for this session.", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                            adapter.notifyDataSetChanged();
+                            currentPosition = 0;
+
+                            if (movies.size() > 1) {
+                                backCardPoster.setVisibility(View.VISIBLE);
+                                loadPoster(movies.get(1).getPosterPath(), backCardPoster);
+                            } else {
+                                backCardPoster.setVisibility(View.INVISIBLE);
+                            }
+
+                        } else {
+                            Toast.makeText(GroupSwipeActivity.this, "Failed to load movies (" + response.code() + ")", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<MovieDTO>> call, @NonNull Throwable t) {
+                        if (isDestroyed() || isFinishing()) return;
+                        Toast.makeText(GroupSwipeActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
-    // MODEL
-    static class MovieModel {
+    private void submitVote(MovieDTO movie, boolean liked) {
 
-        int poster;
+        VoteRequest request = new VoteRequest(sessionId, userId, movie.getId(), liked);
 
-        String title;
+        ApiClient.getInstance(this).create(ApiService.class).submitVote(request)
+                .enqueue(new Callback<Map<String, Object>>() {
 
-        String year;
+                    @Override
+                    public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
+                        if (isDestroyed() || isFinishing()) return;
 
-        String runtime;
+                        if (response.isSuccessful() && response.body() != null) {
+                            Map<String, Object> body = response.body();
 
-        String genres;
+                            String status = body.get("status") != null ? Objects.requireNonNull(body.get("status")).toString() : null;
 
-        int rating;
+                            if ("MATCHED".equals(status) || "finished".equals(status)) {
 
-        MovieModel(int poster, String title, String year, String runtime, String genres, int rating) {
+                                Object movieDetailsObj = body.get("movieDetails");
+                                String title = null;
+                                String posterPath = null;
+                                String matchedId = null;
 
-            this.poster = poster;
+                                if (movieDetailsObj instanceof Map) {
+                                    @SuppressWarnings("unchecked")
+                                    Map<String, Object> details = (Map<String, Object>) movieDetailsObj;
+                                    title = details.get("title") != null ? Objects.requireNonNull(details.get("title")).toString() : null;
+                                    posterPath = details.get("posterPath") != null ? Objects.requireNonNull(details.get("posterPath")).toString() : null;
+                                    matchedId  = details.get("id") != null ? Objects.requireNonNull(details.get("id")).toString() : null;
+                                }
 
-            this.title = title;
+                                if (title == null) title = movie.getTitle();
+                                if (posterPath == null) posterPath = movie.getPosterPath();
 
-            this.year = year;
+                                navigateToMatch(matchedId, title, posterPath);
 
-            this.runtime = runtime;
+                            } else {
 
-            this.genres = genres;
+                                Object matched = body.get("matched");
+                                Object matchedMovieId = body.get("matchedMovieId");
 
-            this.rating = rating;
+                                if (Boolean.TRUE.equals(matched) && matchedMovieId != null) {
+                                    navigateToMatch(matchedMovieId.toString(), movie.getTitle(), movie.getPosterPath());
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {}
+                });
+    }
+
+    private void navigateToMatch(String movieId, String title, String posterPath) {
+
+        Intent intent = new Intent(this, MatchActivity.class);
+        intent.putExtra("movie_id", movieId);
+        intent.putExtra("movie_title", title);
+        intent.putExtra("movie_poster", posterPath);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void swipe(Direction direction) {
+        SwipeAnimationSetting setting = new SwipeAnimationSetting.Builder().setDirection(direction).setDuration(Duration.Normal.duration).build();
+        layoutManager.setSwipeAnimationSetting(setting);
+        cardStackView.swipe();
+    }
+
+    private void loadPoster(String posterPath, ImageView target) {
+
+        if (posterPath == null || posterPath.isEmpty()) {
+            target.setImageResource(R.drawable.genre_action);
+            return;
         }
+
+        String url = posterPath.startsWith("http") ? posterPath : TMDB_IMAGE_BASE + posterPath;
+        Glide.with(this).load(url).centerCrop().placeholder(R.drawable.genre_action).into(target);
+
     }
 
-    // ADAPTER
-    static class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+    class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-        private final List<MovieModel> movieList;
+        private final List<MovieDTO> movieList;
 
-        MovieAdapter(List<MovieModel> movieList) {this.movieList = movieList;}
+        MovieAdapter(List<MovieDTO> movieList) { this.movieList = movieList; }
 
-        @NonNull
-        @Override
+        @NonNull @Override
         public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_card2, parent, false);
-
             return new MovieViewHolder(view);
         }
 
-        @SuppressLint("SetTextI18n")
-        @Override
+        @SuppressLint("SetTextI18n") @Override
         public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-
-            MovieModel movie = movieList.get(position);
-
-            holder.moviePoster.setImageResource(movie.poster);
-
-            holder.movieTitle.setText(movie.title);
-
-            holder.movieInfo.setText(movie.year + ", " + movie.runtime);
-
-            holder.movieGenres.setText(movie.genres);
-
-            // RATING
-            holder.ratingProgress.setProgress(movie.rating);
-
-            holder.ratingText.setText(movie.rating + "%");
+            MovieDTO movie = movieList.get(position);
+            loadPoster(movie.getPosterPath(), holder.moviePoster);
+            holder.movieTitle.setText(movie.getTitle());
+            String year = movie.getReleaseDate() != null && movie.getReleaseDate().length() >= 4 ? movie.getReleaseDate().substring(0, 4) : "";
+            holder.movieInfo.setText(year);
+            holder.movieGenres.setText("");
+            int ratingPct = (int) Math.round(movie.getVoteAverage() * 10);
+            holder.ratingProgress.setProgress(ratingPct);
+            holder.ratingText.setText(ratingPct + "%");
         }
 
         @Override
-        public int getItemCount() {
-            return movieList.size();
-        }
+        public int getItemCount() { return movieList.size(); }
 
-        // VIEW HOLDER
-        static class MovieViewHolder extends RecyclerView.ViewHolder {
+        class MovieViewHolder extends RecyclerView.ViewHolder {
 
             ImageView moviePoster;
-
-            TextView movieTitle;
-
-            TextView movieInfo;
-
-            TextView movieGenres;
-
-            TextView ratingText;
-
+            TextView movieTitle, movieInfo, movieGenres, ratingText;
             CircularProgressIndicator ratingProgress;
-
-            MaterialCardView cardView;
 
             MovieViewHolder(@NonNull View itemView) {
 
                 super(itemView);
 
                 moviePoster = itemView.findViewById(R.id.moviePoster);
-
                 movieTitle = itemView.findViewById(R.id.movieTitle);
-
                 movieInfo = itemView.findViewById(R.id.movieInfo);
-
                 movieGenres = itemView.findViewById(R.id.movieGenres);
-
                 ratingText = itemView.findViewById(R.id.ratingText);
-
                 ratingProgress = itemView.findViewById(R.id.ratingProgress);
 
-                cardView = (MaterialCardView) itemView;
             }
+
         }
+
     }
 }

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:accessibilityHeading="false"
+    android:background="@drawable/background8"
+    android:fitsSystemWindows="true"
+    android:visibility="visible"
+
+    tools:context=".MainActivity"
+    tools:visibility="visible">
+
+    <!-- Movie Dates Logo -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="327dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="100dp"
+        android:contentDescription="@string/moviedateslogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_movie_dates" />
+
+    <!-- Movie Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/movieCard"
+        android:layout_width="326dp"
+        android:layout_height="476dp"
+        android:layout_marginTop="40dp"
+
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="#8A2E2E2E"
+
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/moviePoster"
+                android:layout_width="325dp"
+                android:layout_height="481dp"
+                android:layout_gravity="top|start"
+                android:layout_marginStart="0.27dp"
+                android:layout_marginTop="-3dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/p33156_p_v8_aq1" />
+
+        </FrameLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- MATCH TEXT -->
+    <TextView
+        android:id="@+id/matchText"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+
+        android:fontFamily="@font/youth"
+        android:letterSpacing="0.08"
+        android:scaleX="1.5"
+        android:shadowRadius="2"
+        android:text="@string/it_s_a_match"
+        android:textAlignment="center"
+        android:textColor="#FFFFFFFF"
+
+        android:textSize="50sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movieCard" />
+
+    <!-- "Available to rent or buy" Text-->
+    <TextView
+        android:id="@+id/swipeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/available_to_rent_or_buy"
+        android:textColor="#9A92A8"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/matchText" />
+
+    <nl.dionsegijn.konfetti.KonfettiView
+        android:id="@+id/konfettiView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="20dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

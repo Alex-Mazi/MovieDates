@@ -63,4 +63,7 @@ public interface ApiService {
     @POST("api/users/{id}/solo-swipe")
     Call<Void> postSoloSwipe(@Path("id") long userId, @Body SoloSwipeRequest body);
 
+    @GET("api/sessions/{code}")
+    Call<SessionResponse> getSession(@Path("code") String code);
+
 }

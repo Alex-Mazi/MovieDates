@@ -45,8 +45,6 @@ public class RoomActivity extends AppCompatActivity {
 
     }
 
-    // ── Create ────────────────────────────────────────────────────────────────
-
     private void attemptCreate() {
 
         setLoadingState(true);
@@ -61,6 +59,7 @@ public class RoomActivity extends AppCompatActivity {
 
                         if (response.isSuccessful() && response.body() != null) {
                             Toast.makeText(RoomActivity.this, "Room created!", Toast.LENGTH_LONG).show();
+                            getSharedPreferences("moviedates_prefs", MODE_PRIVATE).edit().putLong("session_id", response.body().getId()).apply();
                             navigateToSwipe(response.body().getCode());
                         } else {
                             Toast.makeText(RoomActivity.this, "Failed to create room (" + response.code() + ")", Toast.LENGTH_LONG).show();
@@ -107,6 +106,7 @@ public class RoomActivity extends AppCompatActivity {
                         setLoadingState(false);
 
                         if (response.isSuccessful() && response.body() != null) {
+                            getSharedPreferences("moviedates_prefs", MODE_PRIVATE).edit().putLong("session_id", response.body().getId()).apply();
                             navigateToSwipe(response.body().getCode());
                         } else if (response.code() == 404) {
                             roomInput.setError("Room not found");

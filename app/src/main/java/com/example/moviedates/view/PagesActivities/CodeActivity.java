@@ -40,6 +40,9 @@ public class CodeActivity extends AppCompatActivity {
     private boolean copied = false;
     private boolean polling = false;
 
+    private Call<SessionResponse> pollCall;
+    private Call<SessionResponse> startCall;
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private static final int POLL_INTERVAL = 4_000;
 
@@ -65,20 +68,24 @@ public class CodeActivity extends AppCompatActivity {
 
         copyIcon.setOnClickListener(v -> copyCode());
         roomCodeText.setOnClickListener(v -> copyCode());
-
         startButton.setOnClickListener(v -> startSession());
 
         startPolling();
-
     }
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
         stopPolling();
+
+        if (pollCall != null) pollCall.cancel();
+        if (startCall != null) startCall.cancel();
+
     }
 
     private void copyCode() {
+
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Room Code", roomCode);
         clipboard.setPrimaryClip(clip);
@@ -89,15 +96,18 @@ public class CodeActivity extends AppCompatActivity {
         }
 
         Toast.makeText(this, "Code copied!", Toast.LENGTH_SHORT).show();
+
     }
 
     private final Runnable pollRunnable = new Runnable() {
+
         @Override
         public void run() {
             if (!polling) return;
             fetchSession();
             handler.postDelayed(this, POLL_INTERVAL);
         }
+
     };
 
     private void startPolling() {
@@ -111,70 +121,70 @@ public class CodeActivity extends AppCompatActivity {
     }
 
     private void fetchSession() {
-        long userId = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getLong("user_id", -1);
 
-        java.util.Map<String, Long> body = new java.util.HashMap<>();
-        body.put("userId", userId);
+        if (isDestroyed() || isFinishing()) return;
 
-        ApiClient.getInstance(this).create(ApiService.class).joinRoom(roomCode, body)
-                .enqueue(new Callback<SessionResponse>() {
+        pollCall = ApiClient.getInstance(this).create(ApiService.class).getSession(roomCode);
+        pollCall.enqueue(new Callback<SessionResponse>() {
 
-                    @Override
-                    public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            renderAvatars(response.body().getParticipants());
-                        }
-                    }
+            @Override
+            public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
+                if (isDestroyed() || isFinishing()) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    renderAvatars(response.body().getParticipants());
+                }
+            }
 
-                    @Override
-                    public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) { }
-                });
+            @Override
+            public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) {}
+        });
     }
 
     @SuppressLint("SetTextI18n")
     private void startSession() {
 
         stopPolling();
-
         startButton.setEnabled(false);
         startButton.setText("Starting…");
 
-        ApiClient.getInstance(this).create(ApiService.class).startSession(roomCode)
-                .enqueue(new Callback<SessionResponse>() {
+        startCall = ApiClient.getInstance(this).create(ApiService.class).startSession(roomCode);
+        startCall.enqueue(new Callback<SessionResponse>() {
 
-                    @Override
-                    public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
+            @Override
+            public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
+                if (isDestroyed() || isFinishing()) return;
 
-                        if (response.isSuccessful()) {
-                            navigateToSwipe();
-                        } else {
-                            startButton.setEnabled(true);
-                            startButton.setText(getString(R.string.start_swiping));
-                            Toast.makeText(CodeActivity.this, "Could not start session (" + response.code() + ")", Toast.LENGTH_SHORT).show();
-                            startPolling();
-                        }
+                if (response.isSuccessful()) {
+                    navigateToSwipe();
+                } else {
+                    startButton.setEnabled(true);
+                    startButton.setText(getString(R.string.start_swiping));
+                    Toast.makeText(CodeActivity.this, "Could not start session (" + response.code() + ")", Toast.LENGTH_SHORT).show();
+                    startPolling();
+                }
+            }
 
-                    }
+            @Override
+            public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) {
+                if (isDestroyed() || isFinishing()) return;
 
-                    @Override
-                    public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) {
-
-                        startButton.setEnabled(true);
-                        startButton.setText(getString(R.string.start_swiping));
-                        Toast.makeText(CodeActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                        startPolling();
-
-                    }
-
-                });
-
+                startButton.setEnabled(true);
+                startButton.setText(getString(R.string.start_swiping));
+                Toast.makeText(CodeActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                startPolling();
+            }
+        });
     }
 
     private void navigateToSwipe() {
+
         Intent intent = new Intent(this, GroupSwipeActivity.class);
         intent.putExtra("room_code", roomCode);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+
     }
 
     private void renderAvatars(java.util.List<AuthResponse.UserPayload> participants) {
@@ -183,10 +193,11 @@ public class CodeActivity extends AppCompatActivity {
 
         avatarContainer.removeAllViews();
 
-        int size   = dpToPx(48);
+        int size = dpToPx(48);
         int margin = dpToPx(6);
 
         for (int i = 0; i < participants.size(); i++) {
+
             AuthResponse.UserPayload p = participants.get(i);
             int color = AVATAR_COLORS[i % AVATAR_COLORS.length];
 
@@ -209,7 +220,6 @@ public class CodeActivity extends AppCompatActivity {
             initial.setTypeface(null, android.graphics.Typeface.BOLD);
 
             String name = p.getDisplayName();
-
             if (name == null || name.isEmpty()) {
                 String email = p.getEmail();
                 name = (email != null && email.contains("@")) ? email.substring(0, email.indexOf('@')) : email;
@@ -230,9 +240,7 @@ public class CodeActivity extends AppCompatActivity {
             frame.addView(initial, new android.widget.FrameLayout.LayoutParams(size, size, android.view.Gravity.CENTER));
 
             avatarContainer.addView(frame);
-
         }
-
     }
 
     private int dpToPx(int dp) {
@@ -243,8 +251,7 @@ public class CodeActivity extends AppCompatActivity {
     private int darken(int color) {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
-        hsv[2] *= (1f - (float) 0.15);
+        hsv[2] *= (1f - 0.15f);
         return Color.HSVToColor(hsv);
     }
-
 }
