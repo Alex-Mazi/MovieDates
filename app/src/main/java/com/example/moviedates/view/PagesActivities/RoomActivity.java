@@ -55,13 +55,36 @@ public class RoomActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
 
-                        setLoadingState(false);
-
                         if (response.isSuccessful() && response.body() != null) {
-                            Toast.makeText(RoomActivity.this, "Room created!", Toast.LENGTH_LONG).show();
-                            getSharedPreferences("moviedates_prefs", MODE_PRIVATE).edit().putLong("session_id", response.body().getId()).apply();
-                            navigateToSwipe(response.body().getCode());
+                            SessionResponse created = response.body();
+                            getSharedPreferences("moviedates_prefs", MODE_PRIVATE).edit().putLong("session_id", created.getId()).apply();
+
+                            Map<String, Long> body = new HashMap<>();
+                            body.put("userId", userId);
+
+                            ApiClient.getInstance(RoomActivity.this).create(ApiService.class).joinRoom(created.getCode(), body)
+                                    .enqueue(new Callback<SessionResponse>() {
+
+                                        @Override
+                                        public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
+                                            setLoadingState(false);
+                                            if (response.isSuccessful() && response.body() != null) {
+                                                navigateToSwipe(response.body().getCode());
+                                            } else {
+                                                Toast.makeText(RoomActivity.this, "Room created but failed to join (" + response.code() + ")", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) {
+                                            setLoadingState(false);
+                                            Toast.makeText(RoomActivity.this, "Room created but join failed: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+
+                                    });
+
                         } else {
+                            setLoadingState(false);
                             Toast.makeText(RoomActivity.this, "Failed to create room (" + response.code() + ")", Toast.LENGTH_LONG).show();
                         }
 
