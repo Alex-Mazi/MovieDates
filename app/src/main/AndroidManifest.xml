@@ -16,6 +16,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:theme="@style/Theme.MovieDates">
             <intent-filter>
@@ -27,46 +28,55 @@
 
         <activity
             android:name=".view.AccessActivities.SignUpActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 
         <activity
             android:name=".view.AccessActivities.LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 
         <activity
             android:name=".view.AccessActivities.GuestActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 
         <activity
             android:name=".view.PagesActivities.RoomActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 
         <activity
             android:name=".view.PagesActivities.GenresActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 
         <activity
             android:name=".view.PagesActivities.PersonalSwipeActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 
         <activity
             android:name=".view.PagesActivities.GroupSwipeActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 
         <activity
             android:name=".view.PagesActivities.MatchActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 
         <activity
             android:name=".view.PagesActivities.CodeActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MovieDates" />
 

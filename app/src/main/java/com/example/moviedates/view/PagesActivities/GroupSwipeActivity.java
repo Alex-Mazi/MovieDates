@@ -241,6 +241,7 @@ public class GroupSwipeActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {}
+
                 });
     }
 
