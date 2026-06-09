@@ -265,13 +265,12 @@ public class GroupSwipeActivity extends AppCompatActivity {
     private void loadPoster(String posterPath, ImageView target) {
 
         if (posterPath == null || posterPath.isEmpty()) {
-            target.setImageResource(R.drawable.genre_action);
+            target.setImageDrawable(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
             return;
         }
 
         String url = posterPath.startsWith("http") ? posterPath : TMDB_IMAGE_BASE + posterPath;
-        Glide.with(this).load(url).centerCrop().placeholder(R.drawable.genre_action).into(target);
-
+        Glide.with(this).load(url).centerCrop().placeholder(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)).error(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)).into(target);
     }
 
     private void fetchAndRenderAvatars() {

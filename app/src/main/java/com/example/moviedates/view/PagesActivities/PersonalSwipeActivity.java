@@ -25,6 +25,7 @@ import com.example.moviedates.network.ApiClient;
 import com.example.moviedates.network.ApiService;
 import com.example.moviedates.network.model.MovieDTO;
 import com.example.moviedates.network.model.SoloSwipeRequest;
+import com.example.moviedates.util.ThankYouDialog;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -206,11 +207,12 @@ public class PersonalSwipeActivity extends AppCompatActivity {
     }
 
     private void showDoneDialog() {
-        new AlertDialog.Builder(this).setTitle("Thank You").setMessage("Thank you for your input.").setCancelable(false)
-                .setPositiveButton("Continue", (dialog, which) -> {
-                    startActivity(new Intent(PersonalSwipeActivity.this, RoomActivity.class));
-                    finish();
-                }).show();
+        ThankYouDialog dialog = new ThankYouDialog();
+        dialog.setOnContinueListener(() -> {
+            startActivity(new Intent(PersonalSwipeActivity.this, RoomActivity.class));
+            finish();
+        });
+        dialog.show(getSupportFragmentManager(), "thank_you");
     }
 
     static class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
