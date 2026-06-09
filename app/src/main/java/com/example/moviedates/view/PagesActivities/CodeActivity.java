@@ -193,31 +193,37 @@ public class CodeActivity extends AppCompatActivity {
 
         avatarContainer.removeAllViews();
 
-        int size = dpToPx(48);
-        int margin = dpToPx(6);
+        int size = dpToPx(52);
+        int overlap = dpToPx(18);
+
+        int[][] gradientPairs = {
+                                { 0xFFE91E63, 0xFFFF6090 },
+                                { 0xFF2196F3, 0xFF64B5F6 },
+                                { 0xFF4CAF50, 0xFF81C784 },
+                                { 0xFFFF9800, 0xFFFFCC02 },
+                                { 0xFF9C27B0, 0xFFCE93D8 },
+        };
 
         for (int i = 0; i < participants.size(); i++) {
 
             AuthResponse.UserPayload p = participants.get(i);
-            int color = AVATAR_COLORS[i % AVATAR_COLORS.length];
+            int[] pair = gradientPairs[i % gradientPairs.length];
 
             View ring = new View(this);
-            LinearLayout.LayoutParams ringParams = new LinearLayout.LayoutParams(size + dpToPx(4), size + dpToPx(4));
-            ringParams.setMargins(margin, 0, margin, 0);
-            ring.setLayoutParams(ringParams);
-            GradientDrawable ringBg = new GradientDrawable();
+            android.widget.FrameLayout.LayoutParams ringParams = new android.widget.FrameLayout.LayoutParams(size + dpToPx(6), size + dpToPx(6));
+            GradientDrawable ringBg = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{ pair[0], pair[1] });
             ringBg.setShape(GradientDrawable.OVAL);
-            ringBg.setColor(color);
+            ringBg.setStroke(dpToPx(2), 0x33FFFFFF);
             ring.setBackground(ringBg);
+            ring.setLayoutParams(ringParams);
 
-            TextView initial = new TextView(this);
-            LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(size, size);
-            tvParams.setMargins(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2));
-            initial.setLayoutParams(tvParams);
-            initial.setGravity(android.view.Gravity.CENTER);
-            initial.setTextColor(Color.WHITE);
-            initial.setTextSize(18);
-            initial.setTypeface(null, android.graphics.Typeface.BOLD);
+            android.widget.FrameLayout innerCircle = new android.widget.FrameLayout(this);
+            android.widget.FrameLayout.LayoutParams innerParams = new android.widget.FrameLayout.LayoutParams(size, size, android.view.Gravity.CENTER);
+            innerCircle.setLayoutParams(innerParams);
+
+            GradientDrawable innerBg = new GradientDrawable(GradientDrawable.Orientation.TR_BL, new int[]{ darken(pair[0]), darken(pair[1]) });
+            innerBg.setShape(GradientDrawable.OVAL);
+            innerCircle.setBackground(innerBg);
 
             String name = p.getDisplayName();
             if (name == null || name.isEmpty()) {
@@ -225,22 +231,32 @@ public class CodeActivity extends AppCompatActivity {
                 name = (email != null && email.contains("@")) ? email.substring(0, email.indexOf('@')) : email;
             }
 
+            TextView initial = new TextView(this);
+            android.widget.FrameLayout.LayoutParams tvParams = new android.widget.FrameLayout.LayoutParams(android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.view.Gravity.CENTER);
+            initial.setLayoutParams(tvParams);
+            initial.setGravity(android.view.Gravity.CENTER);
+            initial.setTextColor(Color.WHITE);
+            initial.setTextSize(20);
+            initial.setTypeface(null, android.graphics.Typeface.BOLD);
+            initial.setShadowLayer(dpToPx(2), 0, dpToPx(1), 0x55000000);
             initial.setText(name != null && !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "?");
 
-            GradientDrawable innerBg = new GradientDrawable();
-            innerBg.setShape(GradientDrawable.OVAL);
-            innerBg.setColor(darken(color));
-            initial.setBackground(innerBg);
+            innerCircle.addView(initial);
 
             android.widget.FrameLayout frame = new android.widget.FrameLayout(this);
-            LinearLayout.LayoutParams frameParams = new LinearLayout.LayoutParams(size + dpToPx(4), size + dpToPx(4));
-            frameParams.setMargins(margin, 0, margin, 0);
+            LinearLayout.LayoutParams frameParams = new LinearLayout.LayoutParams(size + dpToPx(6), size + dpToPx(6));
+
+            if (i > 0) frameParams.setMarginStart(-overlap);
+
+            frame.setElevation(dpToPx(i + 1));
             frame.setLayoutParams(frameParams);
-            frame.addView(ring, new android.widget.FrameLayout.LayoutParams(android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT));
-            frame.addView(initial, new android.widget.FrameLayout.LayoutParams(size, size, android.view.Gravity.CENTER));
+            frame.addView(ring);
+            frame.addView(innerCircle);
 
             avatarContainer.addView(frame);
+
         }
+
     }
 
     private int dpToPx(int dp) {

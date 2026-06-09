@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import com.example.moviedates.network.model.AuthResponse;
+import com.example.moviedates.network.model.SessionResponse;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,6 +55,9 @@ public class GroupSwipeActivity extends AppCompatActivity {
     private MovieAdapter adapter;
 
     private final List<MovieDTO> movies = new ArrayList<>();
+
+    private LinearLayout avatarContainer;
+    private static final int[] AVATAR_COLORS = { 0xFFE91E63, 0xFF2196F3, 0xFF4CAF50, 0xFFFF9800, 0xFF9C27B0 };
 
     private String roomCode;
     private long userId;
@@ -71,6 +80,9 @@ public class GroupSwipeActivity extends AppCompatActivity {
         if (roomCode == null) {
             roomCode = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getString("room_code", "");
         }
+
+        avatarContainer = findViewById(R.id.avatarContainer);
+        fetchAndRenderAvatars();
 
         if (roomCode.isEmpty() || userId == -1 || sessionId == -1) {
             Toast.makeText(this, "Session data missing. Please rejoin the room.", Toast.LENGTH_LONG).show();
@@ -259,6 +271,102 @@ public class GroupSwipeActivity extends AppCompatActivity {
         String url = posterPath.startsWith("http") ? posterPath : TMDB_IMAGE_BASE + posterPath;
         Glide.with(this).load(url).centerCrop().placeholder(R.drawable.genre_action).into(target);
 
+    }
+
+    private void fetchAndRenderAvatars() {
+        ApiClient.getInstance(this).create(ApiService.class).getSession(roomCode)
+                .enqueue(new Callback<SessionResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
+                        if (isDestroyed() || isFinishing()) return;
+                        if (response.isSuccessful() && response.body() != null) {
+                            renderAvatars(response.body().getParticipants());
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) {}
+                });
+    }
+
+    private void renderAvatars(java.util.List<AuthResponse.UserPayload> participants) {
+
+        if (participants == null || avatarContainer == null) return;
+
+        avatarContainer.removeAllViews();
+
+        int size = dpToPx(52);
+        int overlap = dpToPx(18);
+
+        int[][] gradientPairs = {
+                                { 0xFFE91E63, 0xFFFF6090 },
+                                { 0xFF2196F3, 0xFF64B5F6 },
+                                { 0xFF4CAF50, 0xFF81C784 },
+                                { 0xFFFF9800, 0xFFFFCC02 },
+                                { 0xFF9C27B0, 0xFFCE93D8 },
+        };
+
+        for (int i = 0; i < participants.size(); i++) {
+
+            AuthResponse.UserPayload p = participants.get(i);
+            int[] pair = gradientPairs[i % gradientPairs.length];
+
+            View ring = new View(this);
+            android.widget.FrameLayout.LayoutParams ringParams = new android.widget.FrameLayout.LayoutParams(size + dpToPx(6), size + dpToPx(6));
+            GradientDrawable ringBg = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{ pair[0], pair[1] });
+            ringBg.setShape(GradientDrawable.OVAL);
+            ringBg.setStroke(dpToPx(2), 0x33FFFFFF);
+            ring.setBackground(ringBg);
+            ring.setLayoutParams(ringParams);
+
+            android.widget.FrameLayout innerCircle = new android.widget.FrameLayout(this);
+            android.widget.FrameLayout.LayoutParams innerParams = new android.widget.FrameLayout.LayoutParams(size, size, android.view.Gravity.CENTER);
+            innerCircle.setLayoutParams(innerParams);
+
+            GradientDrawable innerBg = new GradientDrawable(GradientDrawable.Orientation.TR_BL, new int[]{ darken(pair[0]), darken(pair[1]) });
+            innerBg.setShape(GradientDrawable.OVAL);
+            innerCircle.setBackground(innerBg);
+
+            String name = p.getDisplayName();
+            if (name == null || name.isEmpty()) {
+                String email = p.getEmail();
+                name = (email != null && email.contains("@")) ? email.substring(0, email.indexOf('@')) : email;
+            }
+
+            TextView initial = new TextView(this);
+            android.widget.FrameLayout.LayoutParams tvParams = new android.widget.FrameLayout.LayoutParams(android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.view.Gravity.CENTER);
+            initial.setLayoutParams(tvParams);
+            initial.setGravity(android.view.Gravity.CENTER);
+            initial.setTextColor(Color.WHITE);
+            initial.setTextSize(20);
+            initial.setTypeface(null, android.graphics.Typeface.BOLD);
+            initial.setShadowLayer(dpToPx(2), 0, dpToPx(1), 0x55000000);
+            initial.setText(name != null && !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "?");
+
+            innerCircle.addView(initial);
+
+            android.widget.FrameLayout frame = new android.widget.FrameLayout(this);
+            LinearLayout.LayoutParams frameParams = new LinearLayout.LayoutParams(size + dpToPx(6), size + dpToPx(6));
+            if (i > 0) frameParams.setMarginStart(-overlap);
+            frame.setElevation(dpToPx(i + 1));
+            frame.setLayoutParams(frameParams);
+            frame.addView(ring);
+            frame.addView(innerCircle);
+
+            avatarContainer.addView(frame);
+
+        }
+
+    }
+
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
+    }
+
+    private int darken(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= 0.85f;
+        return Color.HSVToColor(hsv);
     }
 
     class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
