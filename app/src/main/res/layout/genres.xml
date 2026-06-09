@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-        android:fillViewport="true">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/logo_movie_dates" />
 
-        <!-- "Help us determine what you like" Text-->
+        <!-- "Help us determine what you like" Text -->
         <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
@@ -44,6 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+        <!-- Genres Grid -->
         <GridLayout
             android:id="@+id/genreGrid"
             android:layout_width="327dp"

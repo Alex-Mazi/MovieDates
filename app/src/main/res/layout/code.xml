@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+    <!-- Avatars -->
     <LinearLayout
         android:id="@+id/avatarContainer"
         android:layout_width="wrap_content"
@@ -31,6 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+    <!-- Copy Code -->
     <LinearLayout
         android:id="@+id/codeRow"
         android:layout_width="wrap_content"
@@ -66,7 +67,7 @@
 
     </LinearLayout>
 
-    <!-- "Waiting for your friends to join..." Text-->
+    <!-- "Waiting for your friends to join..." Text -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
@@ -84,7 +85,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/codeRow" />
 
-    <!-- "Share your room code with them by clicking on it!" Text-->
+    <!-- "Share your room code with them by clicking on it!" Text -->
     <TextView
         android:id="@+id/subText"
         android:layout_width="wrap_content"

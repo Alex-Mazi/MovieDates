@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:accessibilityHeading="false"
     android:background="@drawable/background8"
     android:fitsSystemWindows="true"
     android:visibility="visible"
-
     tools:context=".MainActivity"
-    tools:visibility="visible">
+    tools:visibility="visible"
+    tools:ignore="UnusedAttribute">
 
     <!-- Movie Dates Logo -->
     <ImageView
@@ -54,20 +52,21 @@
                 android:layout_gravity="top|start"
                 android:layout_marginStart="0.27dp"
                 android:layout_marginTop="-3dp"
+                android:contentDescription="movie"
                 android:scaleType="centerCrop"
-                android:src="@drawable/p33156_p_v8_aq1" />
+                android:src="@drawable/p33156_p_v8_aq1"
+                tools:ignore="HardcodedText" />
 
         </FrameLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- MATCH TEXT -->
+    <!-- "It's a match!" Text -->
     <TextView
         android:id="@+id/matchText"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginTop="15dp"
-
         android:fontFamily="@font/youth"
         android:letterSpacing="0.08"
         android:scaleX="1.5"
@@ -75,14 +74,12 @@
         android:text="@string/it_s_a_match"
         android:textAlignment="center"
         android:textColor="#FFFFFFFF"
-
         android:textSize="50sp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/movieCard" />
 
-    <!-- "Available to rent or buy" Text-->
+    <!-- "Available to rent or buy" Text -->
     <TextView
         android:id="@+id/swipeText"
         android:layout_width="wrap_content"

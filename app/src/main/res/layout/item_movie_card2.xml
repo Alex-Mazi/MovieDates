@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="315dp"
     android:layout_height="465dp"
     android:layout_gravity="center"
-
     android:clipChildren="false"
     android:clipToPadding="false"
-
     app:cardCornerRadius="28dp"
     app:cardElevation="12dp"
     app:strokeWidth="1dp"
@@ -21,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- POSTER -->
+        <!-- Movie Dates Logo -->
         <ImageView
             android:id="@+id/moviePoster"
             android:layout_width="match_parent"
@@ -29,19 +26,17 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
-        <!-- LIGHT OVERLAY -->
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#33000000" />
 
-        <!-- BOTTOM GRADIENT -->
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rectangle1" />
 
-        <!-- TITLE -->
+        <!-- Title -->
         <TextView
             android:id="@+id/movieTitle"
             android:layout_width="260dp"
@@ -62,7 +57,7 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <!-- YEAR + RUNTIME -->
+        <!-- Year + Runtime -->
         <TextView
             android:id="@+id/movieInfo"
             android:layout_width="wrap_content"
@@ -76,7 +71,7 @@
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/movieTitle"/>
 
-        <!-- GENRES -->
+        <!-- Genres -->
         <TextView
             android:id="@+id/movieGenres"
             android:layout_width="250dp"
@@ -92,7 +87,7 @@
             android:textSize="13sp"
             app:layout_constraintTop_toBottomOf="@id/movieInfo"/>
 
-        <!-- RATING CIRCLE -->
+        <!-- Rating Process -->
         <FrameLayout
             android:layout_width="56dp"
             android:layout_height="56dp"
@@ -121,7 +116,8 @@
                 android:text="85%"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
         </FrameLayout>
 

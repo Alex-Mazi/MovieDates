@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,7 +9,7 @@
     android:fitsSystemWindows="true"
     tools:context=".view.PagesActivities.PersonalSwipeActivity">
 
-    <!-- LOGO -->
+    <!-- Movie Dates Logo -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="280dp"
@@ -22,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_movie_dates" />
 
-    <!-- TITLE -->
+    <!-- "Help us determine what you like" Text-->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
@@ -37,6 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
 
+    <!-- "Swipe up to skip" Text-->
     <TextView
         android:id="@+id/swipeUpHint"
         android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleText" />
 
-    <!-- FAKE BACK CARD — declared FIRST so it's behind -->
+    <!-- Fake Back Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/backCardPreview"
         android:layout_width="315dp"
@@ -72,11 +72,12 @@
             android:id="@+id/backCardPoster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="TODO"
             android:scaleType="centerCrop" />
 
     </androidx.cardview.widget.CardView>
 
-    <!-- CARD STACK — declared SECOND so it's in front, higher elevation -->
+    <!-- Movies Card Stack -->
     <com.yuyakaido.android.cardstackview.CardStackView
         android:id="@+id/cardStackView"
         android:layout_width="315dp"
@@ -89,7 +90,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/swipeUpHint"/>
 
-    <!-- BUTTON BAR -->
+    <!-- Swipe Button Bar -->
     <LinearLayout
         android:id="@+id/swipeButtons"
         android:layout_width="255dp"
@@ -105,6 +106,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardStackView">
 
+        <!-- "Meh..." Button -->
         <TextView
             android:id="@+id/mehButton"
             android:layout_width="wrap_content"
@@ -129,6 +131,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <!-- "Loved!" Button -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -150,7 +153,7 @@
 
     </LinearLayout>
 
-    <!-- INSTRUCTION -->
+    <!-- "Swipe right or left" Text -->
     <TextView
         android:id="@+id/swipeText"
         android:layout_width="wrap_content"

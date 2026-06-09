@@ -9,7 +9,8 @@
     android:fitsSystemWindows="true"
     android:visibility="visible"
     tools:context=".MainActivity"
-    tools:visibility="visible">
+    tools:visibility="visible"
+    tools:ignore="UnusedAttribute">
 
     <!-- Movie Dates Logo -->
     <ImageView
@@ -23,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_movie_dates" />
 
-    <!-- "Join a room" Text-->
+    <!-- "Join a room" Text -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"

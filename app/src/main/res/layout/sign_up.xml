@@ -9,7 +9,8 @@
     android:fitsSystemWindows="true"
     android:visibility="visible"
     tools:context=".MainActivity"
-    tools:visibility="visible">
+    tools:visibility="visible"
+    tools:ignore="UnusedAttribute">
 
     <!-- Movie Dates Logo -->
     <ImageView

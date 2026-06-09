@@ -8,7 +8,9 @@
     android:layout_height="match_parent"
     android:background="@drawable/background3"
     android:fitsSystemWindows="true"
-    tools:context=".view.PagesActivities.PersonalSwipeActivity">
+    tools:context=".view.PagesActivities.PersonalSwipeActivity"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <!-- LOGO -->
     <ImageView
@@ -25,10 +27,13 @@
     <LinearLayout
         android:id="@+id/avatarContainer"
         android:layout_width="wrap_content"
-        android:layout_height="52dp"
-        android:layout_marginTop="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingVertical="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
@@ -38,7 +43,7 @@
         android:id="@+id/backCardPreview"
         android:layout_width="315dp"
         android:layout_height="465dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="35dp"
         android:rotation="-7"
         android:translationX="18dp"
         android:translationY="10dp"
@@ -54,6 +59,7 @@
             android:id="@+id/backCardPoster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="TODO"
             android:scaleType="centerCrop" />
 
     </androidx.cardview.widget.CardView>
@@ -63,7 +69,7 @@
         android:id="@+id/cardStackView"
         android:layout_width="315dp"
         android:layout_height="465dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="45dp"
         android:elevation="8dp"
         android:clipChildren="false"
         android:clipToPadding="false"
