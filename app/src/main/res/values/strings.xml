@@ -67,4 +67,7 @@
     <string name="start_swiping">Start swiping</string>
     <string name="line">------</string>
     <string name="copy_room_code">Copy room code</string>
+    <string name="you_re_all_set">You\'re all set!</string>
+    <string name="we_ve_noted">We\'ve noted your taste. Time to find your perfect movie match!</string>
+    <string name="let_s_go">Let\'s go →</string>
 </resources>
