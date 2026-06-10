@@ -116,14 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void startGoogleSignIn() {
 
-        GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(WEB_CLIENT_ID)
-                .build();
+        GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(false).setServerClientId(WEB_CLIENT_ID).build();
 
-        GetCredentialRequest request = new GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
-                .build();
+        GetCredentialRequest request = new GetCredentialRequest.Builder().addCredentialOption(googleIdOption).build();
 
         credentialManager.getCredentialAsync(this, request, null, Executors.newSingleThreadExecutor(),
                 new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
@@ -157,16 +152,12 @@ public class MainActivity extends AppCompatActivity {
                             saveTokenAndProceed(response.body().getToken(), response.body().getUser().getId(), response.body().isNewUser());
                             return;
                         }
-                        runOnUiThread(() ->
-                                Toast.makeText(MainActivity.this, "Google Sign-In failed (" + response.code() + ").", Toast.LENGTH_LONG).show()
-                        );
+                        runOnUiThread(() -> Toast.makeText(MainActivity.this, "Google Sign-In failed (" + response.code() + ").", Toast.LENGTH_LONG).show());
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<AuthResponse> call, @NonNull Throwable t) {
-                        runOnUiThread(() ->
-                                Toast.makeText(MainActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show()
-                        );
+                        runOnUiThread(() -> Toast.makeText(MainActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show());
                     }
                 });
     }
