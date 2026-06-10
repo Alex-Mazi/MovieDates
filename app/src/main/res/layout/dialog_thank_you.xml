@@ -14,9 +14,10 @@
 
     <View
         android:id="@+id/dialogGlow"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:background="@drawable/dialog_glow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.45"
         app:layout_constraintTop_toTopOf="@id/dialogIconWrapper"
         app:layout_constraintBottom_toBottomOf="@id/dialogIconWrapper"
         app:layout_constraintStart_toStartOf="@id/dialogIconWrapper"
@@ -78,7 +79,9 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/dialogButton"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/dialog_button_bg"
         android:text="@string/let_s_go"

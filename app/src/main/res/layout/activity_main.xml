@@ -12,16 +12,24 @@
     tools:visibility="visible"
     tools:ignore="UnusedAttribute">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.22" />
+
     <!-- Movie Dates Logo -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="327dp"
         android:layout_height="68dp"
-        android:layout_marginTop="188dp"
         android:contentDescription="@string/moviedateslogo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
+        app:layout_constraintTop_toBottomOf="@id/topGuideline"
         app:srcCompat="@drawable/logo_movie_dates" />
 
     <!-- "Create an account or continue as guest" Text -->
@@ -62,7 +70,9 @@
     <!-- Email Input -->
     <EditText
         android:id="@+id/emailInput"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="40dp"
         android:layout_marginTop="24dp"
         android:autofillHints=""
@@ -82,7 +92,9 @@
     <!-- Sign Up + Login Buttons -->
     <LinearLayout
         android:id="@+id/authButtonsLayout"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
@@ -132,7 +144,9 @@
     <!-- OR Divider -->
     <LinearLayout
         android:id="@+id/orDividerLayout"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center_vertical"
@@ -174,7 +188,9 @@
     <!-- Continue As Guest Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continueAsGuestButton"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/black_3d_button"
@@ -194,7 +210,9 @@
     <!-- OR Divider -->
     <LinearLayout
         android:id="@+id/orDividerLayout2"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center_vertical"
@@ -236,7 +254,9 @@
     <!-- Social Button Container -->
     <LinearLayout
         android:id="@+id/socialButtonLayout"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:orientation="vertical"
@@ -279,7 +299,9 @@
     <!-- Terms Layout-->
     <LinearLayout
         android:id="@+id/Terms"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
@@ -313,7 +335,9 @@
 
     <!-- Policy Layout -->
     <LinearLayout
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:gravity="center"

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,11 +11,13 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <!-- LOGO -->
+    <!-- Movie Dates Logo -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="280dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_marginTop="52dp"
         android:contentDescription="@string/moviedateslogo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,6 +25,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_movie_dates" />
 
+    <!-- Avatars -->
     <LinearLayout
         android:id="@+id/avatarContainer"
         android:layout_width="wrap_content"
@@ -38,22 +40,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
 
-    <!-- FAKE BACK CARD — declared FIRST so it's behind -->
+    <!-- Fake Back Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/backCardPreview"
-        android:layout_width="315dp"
-        android:layout_height="465dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
         android:layout_marginTop="35dp"
+        app:layout_constraintDimensionRatio="2:3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/avatarContainer"
         android:rotation="-7"
         android:translationX="18dp"
         android:translationY="10dp"
         android:elevation="2dp"
         app:cardCornerRadius="28dp"
         app:cardElevation="2dp"
-        app:cardBackgroundColor="#00000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/avatarContainer">
+        app:cardBackgroundColor="#00000000">
 
         <ImageView
             android:id="@+id/backCardPoster"
@@ -64,24 +69,29 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- CARD STACK — declared SECOND so it's in front, higher elevation -->
+    <!-- Movies Card Stack -->
     <com.yuyakaido.android.cardstackview.CardStackView
         android:id="@+id/cardStackView"
-        android:layout_width="315dp"
-        android:layout_height="465dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
         android:layout_marginTop="45dp"
-        android:elevation="8dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
+        app:layout_constraintDimensionRatio="2:3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/avatarContainer"/>
+        app:layout_constraintTop_toBottomOf="@id/avatarContainer"
+        android:elevation="8dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"/>
 
-    <!-- BUTTON BAR -->
+    <!-- Swipe Button Bar -->
     <LinearLayout
         android:id="@+id/swipeButtons"
-        android:layout_width="255dp"
+        android:layout_width="0dp"
         android:layout_height="46dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/rectangle2"
         android:elevation="8dp"
@@ -93,6 +103,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardStackView">
 
+        <!-- "Meh..." Button -->
         <TextView
             android:id="@+id/mehButton"
             android:layout_width="wrap_content"
@@ -117,6 +128,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <!-- "Loved!" Button -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -138,7 +150,7 @@
 
     </LinearLayout>
 
-    <!-- INSTRUCTION -->
+    <!-- "Swipe right or left" Text -->
     <TextView
         android:id="@+id/swipeText"
         android:layout_width="wrap_content"

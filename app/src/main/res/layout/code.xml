@@ -10,7 +10,9 @@
     <!-- Movie Dates Logo -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="68dp"
         android:layout_marginTop="48dp"
         android:contentDescription="@string/moviedateslogo"
@@ -105,7 +107,9 @@
     <!-- Start swiping Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
-        android:layout_width="327dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:layout_height="72dp"
         android:layout_marginTop="46dp"
         android:background="@drawable/black_3d_button"

@@ -16,9 +16,11 @@
         <!-- Movie Dates Logo -->
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="327dp"
             android:layout_height="68dp"
-            android:layout_marginTop="80dp"
+            android:layout_width="0dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginEnd="42dp"
+            android:layout_marginTop="40dp"
             android:contentDescription="@string/moviedateslogo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +49,9 @@
         <!-- Genres Grid -->
         <GridLayout
             android:id="@+id/genreGrid"
-            android:layout_width="327dp"
+            android:layout_width="0dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginEnd="42dp"
             android:layout_height="0dp"
             android:layout_marginTop="24dp"
             android:columnCount="2"
@@ -61,7 +65,9 @@
         <!-- Next Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nextButton"
-            android:layout_width="327dp"
+            android:layout_width="0dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginEnd="42dp"
             android:layout_height="60dp"
             android:layout_marginTop="25dp"
             android:background="@drawable/black_3d_button"

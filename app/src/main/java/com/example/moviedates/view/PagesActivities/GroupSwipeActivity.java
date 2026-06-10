@@ -45,6 +45,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
 public class GroupSwipeActivity extends AppCompatActivity {
 
     private static final String TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
@@ -53,7 +56,7 @@ public class GroupSwipeActivity extends AppCompatActivity {
     private CardStackLayoutManager layoutManager;
     private ImageView backCardPoster;
     private MovieAdapter adapter;
-
+    private Socket socket;
     private final List<MovieDTO> movies = new ArrayList<>();
 
     private LinearLayout avatarContainer;
@@ -75,7 +78,7 @@ public class GroupSwipeActivity extends AppCompatActivity {
 
         userId = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getLong("user_id", -1);
         sessionId = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getLong("session_id", -1);
-        roomCode  = getIntent().getStringExtra("room_code");
+        roomCode = getIntent().getStringExtra("room_code");
 
         if (roomCode == null) {
             roomCode = getSharedPreferences("moviedates_prefs", MODE_PRIVATE).getString("room_code", "");
@@ -95,11 +98,40 @@ public class GroupSwipeActivity extends AppCompatActivity {
 
         setupCardStack();
         loadDeck();
+        connectSocket();
+        checkSessionState();
 
         mehButton.setOnClickListener(v -> swipe(Direction.Left));
         loveButton.setOnClickListener(v -> swipe(Direction.Right));
+
     }
 
+    private void checkSessionState() {
+
+        ApiClient.getInstance(this).create(ApiService.class).getSession(roomCode)
+                .enqueue(new Callback<SessionResponse>() {
+
+                    @Override
+                    public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
+
+                        if (isDestroyed() || isFinishing()) return;
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            SessionResponse session = response.body();
+                            if (session.isFinished() && session.getMatchedMovieId() != 0) {
+                                String id = String.valueOf(session.getMatchedMovieId());
+                                navigateToMatch(id, "", "");
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) {}
+
+                });
+
+    }
     private void setupCardStack() {
 
         layoutManager = new CardStackLayoutManager(this, new CardStackListener() {
@@ -112,8 +144,12 @@ public class GroupSwipeActivity extends AppCompatActivity {
 
                 boolean liked = direction == Direction.Right;
                 submitVote(movies.get(currentPosition), liked);
-
                 currentPosition = layoutManager.getTopPosition();
+
+                if (currentPosition >= movies.size() - 3) {
+                    loadMoreMovies();
+                }
+
                 int backIndex = currentPosition + 1;
 
                 if (backIndex < movies.size()) {
@@ -122,6 +158,7 @@ public class GroupSwipeActivity extends AppCompatActivity {
                 } else {
                     backCardPoster.setVisibility(View.INVISIBLE);
                 }
+
             }
 
             @Override public void onCardRewound() {}
@@ -145,6 +182,7 @@ public class GroupSwipeActivity extends AppCompatActivity {
 
         adapter = new MovieAdapter(movies);
         cardStackView.setAdapter(adapter);
+
     }
 
     private void loadDeck() {
@@ -154,6 +192,7 @@ public class GroupSwipeActivity extends AppCompatActivity {
 
                     @SuppressLint("NotifyDataSetChanged") @Override
                     public void onResponse(@NonNull Call<List<MovieDTO>> call, @NonNull Response<List<MovieDTO>> response) {
+
                         if (isDestroyed() || isFinishing()) return;
 
                         if (response.isSuccessful() && response.body() != null) {
@@ -181,6 +220,7 @@ public class GroupSwipeActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(GroupSwipeActivity.this, "Failed to load movies (" + response.code() + ")", Toast.LENGTH_LONG).show();
                         }
+
                     }
 
                     @Override
@@ -188,7 +228,89 @@ public class GroupSwipeActivity extends AppCompatActivity {
                         if (isDestroyed() || isFinishing()) return;
                         Toast.makeText(GroupSwipeActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
+
                 });
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void loadMoreMovies() {
+
+        ApiClient.getInstance(this).create(ApiService.class).getDeck(roomCode)
+                .enqueue(new Callback<List<MovieDTO>>() {
+
+                    @Override
+                    public void onResponse(@NonNull Call<List<MovieDTO>> call, @NonNull Response<List<MovieDTO>> response) {
+
+                        if (isDestroyed() || isFinishing()) return;
+
+                        if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                            for (MovieDTO movie : response.body()) {
+                                if (movie != null && !movies.contains(movie)) movies.add(movie);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<MovieDTO>> call, @NonNull Throwable t) {}
+
+                });
+
+    }
+
+    private void connectSocket() {
+
+        try {
+
+            socket = IO.socket("http://129.159.31.140:9092");
+
+            socket.on(Socket.EVENT_CONNECT, args -> {
+                socket.emit("join_room", roomCode);
+                android.util.Log.d("GroupSwipe", "Socket connected, joined room: " + roomCode);
+            });
+
+            socket.on("match_found", args -> {
+
+                if (isDestroyed() || isFinishing()) return;
+                int matchedMovieId = ((Number) args[0]).intValue();
+
+                MovieDTO matched = null;
+                for (MovieDTO m : movies) {
+                    if (m.getId() == matchedMovieId) {
+                        matched = m;
+                        break;
+                    }
+                }
+
+                final String id = String.valueOf(matchedMovieId);
+                final String title = matched != null ? matched.getTitle() : "";
+                final String poster = matched != null ? matched.getPosterPath() : "";
+
+                runOnUiThread(() -> navigateToMatch(id, title, poster));
+
+            });
+
+            socket.on(Socket.EVENT_CONNECT_ERROR, args ->
+                    android.util.Log.e("GroupSwipe", "Socket error: " + args[0])
+            );
+
+            socket.connect();
+
+        } catch (Exception e) {
+            android.util.Log.e("GroupSwipe", "Socket init failed: " + e.getMessage());
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (socket != null) {
+            socket.disconnect();
+            socket.off();
+        }
     }
 
     private void submitVote(MovieDTO movie, boolean liked) {
@@ -203,6 +325,7 @@ public class GroupSwipeActivity extends AppCompatActivity {
                         if (isDestroyed() || isFinishing()) return;
 
                         if (response.isSuccessful() && response.body() != null) {
+
                             Map<String, Object> body = response.body();
 
                             String status = body.get("status") != null ? Objects.requireNonNull(body.get("status")).toString() : null;
@@ -236,7 +359,9 @@ public class GroupSwipeActivity extends AppCompatActivity {
                                     navigateToMatch(matchedMovieId.toString(), movie.getTitle(), movie.getPosterPath());
                                 }
                             }
+
                         }
+
                     }
 
                     @Override
@@ -271,11 +396,13 @@ public class GroupSwipeActivity extends AppCompatActivity {
 
         String url = posterPath.startsWith("http") ? posterPath : TMDB_IMAGE_BASE + posterPath;
         Glide.with(this).load(url).centerCrop().placeholder(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)).error(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)).into(target);
+
     }
 
     private void fetchAndRenderAvatars() {
         ApiClient.getInstance(this).create(ApiService.class).getSession(roomCode)
                 .enqueue(new Callback<SessionResponse>() {
+
                     @Override
                     public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
                         if (isDestroyed() || isFinishing()) return;
@@ -283,9 +410,12 @@ public class GroupSwipeActivity extends AppCompatActivity {
                             renderAvatars(response.body().getParticipants());
                         }
                     }
+
                     @Override
                     public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) {}
+
                 });
+
     }
 
     private void renderAvatars(java.util.List<AuthResponse.UserPayload> participants) {
@@ -297,12 +427,11 @@ public class GroupSwipeActivity extends AppCompatActivity {
         int size = dpToPx(52);
         int overlap = dpToPx(18);
 
-        int[][] gradientPairs = {
-                                { 0xFFE91E63, 0xFFFF6090 },
-                                { 0xFF2196F3, 0xFF64B5F6 },
-                                { 0xFF4CAF50, 0xFF81C784 },
-                                { 0xFFFF9800, 0xFFFFCC02 },
-                                { 0xFF9C27B0, 0xFFCE93D8 },
+        int[][] gradientPairs = {{ 0xFFE91E63, 0xFFFF6090 },
+                                 { 0xFF2196F3, 0xFF64B5F6 },
+                                 { 0xFF4CAF50, 0xFF81C784 },
+                                 { 0xFFFF9800, 0xFFFFCC02 },
+                                 { 0xFF9C27B0, 0xFFCE93D8 },
         };
 
         for (int i = 0; i < participants.size(); i++) {
@@ -419,4 +548,5 @@ public class GroupSwipeActivity extends AppCompatActivity {
         }
 
     }
+
 }
