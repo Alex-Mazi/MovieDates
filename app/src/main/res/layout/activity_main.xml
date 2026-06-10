@@ -303,15 +303,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:fontFamily="@font/roboto_r"
+            android:maxLines="1"
             android:text="@string/by_clicking_continue_you_agree_to_our"
             android:textColor="#DADADA"
             android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:fontFamily="@font/roboto"
             android:paddingStart="4dp"
             android:text="@string/terms_of_service"
