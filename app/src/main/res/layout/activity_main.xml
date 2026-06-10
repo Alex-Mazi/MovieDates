@@ -4,32 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:accessibilityHeading="false"
     android:background="@drawable/background"
     android:fitsSystemWindows="true"
-    android:visibility="visible"
-    tools:context=".MainActivity"
-    tools:visibility="visible"
-    tools:ignore="UnusedAttribute">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/topGuideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="150dp" />
+    tools:context=".MainActivity">
 
     <!-- Movie Dates Logo -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_height="68dp"
-        android:contentDescription="@string/moviedateslogo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="0dp"
+        android:layout_height="68dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        app:layout_constraintTop_toBottomOf="@id/topGuideline"
+        android:contentDescription="@string/moviedateslogo"
+        app:layout_constraintBottom_toTopOf="@+id/titleText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/logo_movie_dates" />
 
     <!-- "Create an account or continue as guest" Text -->
@@ -37,16 +28,16 @@
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/roboto"
         android:gravity="center"
         android:lineSpacingExtra="2dp"
-        android:paddingTop="12dp"
         android:text="@string/create_an_account_or_continue_as_guest"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/subtitleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -56,13 +47,15 @@
         android:id="@+id/subtitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/roboto_r"
         android:gravity="center"
         android:lineSpacingExtra="2dp"
         android:text="@string/enter_your_email_to_sign_up_for_this_app"
-        android:fontFamily="@font/roboto_r"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/emailInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleText" />
@@ -71,61 +64,61 @@
     <EditText
         android:id="@+id/emailInput"
         android:layout_width="0dp"
+        android:layout_height="40dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:autofillHints=""
         android:background="@drawable/input_background"
-        android:hint="@string/email_domain_com"
         android:fontFamily="@font/roboto_r"
+        android:hint="@string/email_domain_com"
+        android:inputType="textEmailAddress"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:textColor="#000000"
         android:textColorHint="#828282"
         android:textSize="14sp"
-        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/authButtonsLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subtitleText" />
+        app:layout_constraintTop_toBottomOf="@+id/subtitleText" />
 
     <!-- Sign Up + Login Buttons -->
     <LinearLayout
         android:id="@+id/authButtonsLayout"
         android:layout_width="0dp"
+        android:layout_height="40dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
         android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/orDividerLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailInput">
+        app:layout_constraintTop_toBottomOf="@+id/emailInput">
 
-        <!-- Sign Up Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signUpButton"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
             android:background="@drawable/black_3d_button"
             android:elevation="6dp"
+            android:fontFamily="@font/roboto"
             android:stateListAnimator="@null"
             android:text="@string/sign_up"
-            android:fontFamily="@font/roboto"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
             app:backgroundTint="@null" />
 
-        <!-- Login Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="6dp"
             android:layout_weight="1"
             android:background="@drawable/black_3d_button"
@@ -145,24 +138,23 @@
     <LinearLayout
         android:id="@+id/orDividerLayout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/continueAsGuestButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/authButtonsLayout">
+        app:layout_constraintTop_toBottomOf="@+id/authButtonsLayout">
 
-        <!-- Left Line -->
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1"
             android:background="#E6E6E6" />
 
-        <!-- OR Text -->
         <TextView
             android:id="@+id/orText"
             android:layout_width="wrap_content"
@@ -176,7 +168,6 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <!-- Right Line -->
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
@@ -189,9 +180,9 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continueAsGuestButton"
         android:layout_width="0dp"
+        android:layout_height="40dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/black_3d_button"
         android:elevation="6dp"
@@ -203,32 +194,32 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:backgroundTint="@null"
+        app:layout_constraintBottom_toTopOf="@+id/orDividerLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/orDividerLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/orDividerLayout" />
 
-    <!-- OR Divider -->
+    <!-- OR Divider 2 -->
     <LinearLayout
         android:id="@+id/orDividerLayout2"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/socialButtonLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/continueAsGuestButton">
+        app:layout_constraintTop_toBottomOf="@+id/continueAsGuestButton">
 
-        <!-- Left Line -->
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1"
             android:background="#E6E6E6" />
 
-        <!-- OR Text -->
         <TextView
             android:id="@+id/orText2"
             android:layout_width="wrap_content"
@@ -242,7 +233,6 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <!-- Right Line -->
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
@@ -255,32 +245,31 @@
     <LinearLayout
         android:id="@+id/socialButtonLayout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/Terms"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/orDividerLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/orDividerLayout2">
 
         <!-- Google Button -->
         <LinearLayout
             android:id="@+id/googleButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginBottom="8dp"
             android:background="@drawable/social_button_bg"
             android:gravity="center"
             android:orientation="horizontal">
 
-            <!-- Google Logo -->
             <ImageView
                 android:id="@+id/googleLogo"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/logo_google"
-                android:contentDescription="@string/google_logo" />
+                android:contentDescription="@string/google_logo"
+                android:src="@drawable/logo_google" />
 
             <TextView
                 android:id="@+id/googleText"
@@ -296,22 +285,21 @@
 
     </LinearLayout>
 
-    <!-- Terms Layout-->
+    <!-- Terms Layout -->
     <LinearLayout
         android:id="@+id/Terms"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/policyLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/socialButtonLayout">
+        app:layout_constraintTop_toBottomOf="@+id/socialButtonLayout">
 
-        <!-- "By clicking continue, you agree to our" Text -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -321,13 +309,12 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <!-- "Terms of Service" Text -->
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/terms_of_service"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/roboto"
             android:paddingStart="4dp"
+            android:text="@string/terms_of_service"
             android:textColor="#000000"
             android:textSize="12sp" />
 
@@ -335,37 +322,36 @@
 
     <!-- Policy Layout -->
     <LinearLayout
+        android:id="@+id/policyLayout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Terms">
+        app:layout_constraintTop_toBottomOf="@+id/Terms">
 
-        <!-- "and" Text -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/and"
             android:fontFamily="@font/roboto_r"
+            android:text="@string/and"
             android:textColor="#DADADA"
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <!-- "Privacy Policy" Text -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/privacy_policy"
+            android:fontFamily="@font/roboto"
             android:paddingStart="4dp"
+            android:text="@string/privacy_policy"
             android:textColor="#000000"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 

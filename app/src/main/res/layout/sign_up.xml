@@ -4,49 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:accessibilityHeading="false"
     android:background="@drawable/background2"
-    android:fitsSystemWindows="true"
-    android:visibility="visible"
-    tools:context=".MainActivity"
-    tools:visibility="visible"
-    tools:ignore="UnusedAttribute">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/topGuideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.18" />
+    tools:context=".view.AccessActivities.SignUpActivity">
 
     <!-- Movie Dates Logo -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_height="68dp"
-        android:contentDescription="@string/moviedateslogo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="0dp"
+        android:layout_height="60dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        app:layout_constraintTop_toBottomOf="@id/topGuideline"
+        android:contentDescription="@string/moviedateslogo"
+        app:layout_constraintBottom_toTopOf="@+id/titleText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/logo_movie_dates" />
 
-    <!-- "Sign up to create an account" Text-->
+    <!-- "Sign up to create an account" Text -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto"
         android:gravity="center"
         android:lineSpacingExtra="2dp"
-        android:paddingTop="10dp"
         android:text="@string/sign_up_to_create_an_account"
-        android:fontFamily="@font/roboto"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/emailInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -55,47 +45,49 @@
     <EditText
         android:id="@+id/emailInput"
         android:layout_width="0dp"
+        android:layout_height="40dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:autofillHints=""
         android:background="@drawable/input_background"
-        android:hint="@string/email_domain_com"
         android:fontFamily="@font/roboto_r"
+        android:hint="@string/email_domain_com"
         android:inputType="textEmailAddress"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:textColor="#000000"
         android:textColorHint="#828282"
         android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/passwordLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
     <!-- Password Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordLayout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
+        app:boxBackgroundMode="none"
         app:endIconMode="password_toggle"
         app:hintEnabled="false"
-        app:boxBackgroundMode="none"
+        app:layout_constraintBottom_toTopOf="@+id/confirmLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailInput">
+        app:layout_constraintTop_toBottomOf="@+id/emailInput">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/input_background"
+            android:fontFamily="@font/roboto_r"
             android:gravity="center_vertical"
             android:hint="@string/password"
-            android:fontFamily="@font/roboto_r"
             android:includeFontPadding="false"
             android:inputType="textPassword"
             android:paddingStart="16dp"
@@ -110,25 +102,26 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confirmLayout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
+        app:boxBackgroundMode="none"
         app:endIconMode="password_toggle"
         app:hintEnabled="false"
-        app:boxBackgroundMode="none"
+        app:layout_constraintBottom_toTopOf="@+id/signUpButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordLayout">
+        app:layout_constraintTop_toBottomOf="@+id/passwordLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/confirmInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/input_background"
+            android:fontFamily="@font/roboto_r"
             android:gravity="center_vertical"
             android:hint="@string/confirm_password"
-            android:fontFamily="@font/roboto_r"
             android:includeFontPadding="false"
             android:inputType="textPassword"
             android:paddingStart="16dp"
@@ -143,9 +136,9 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signUpButton"
         android:layout_width="0dp"
+        android:layout_height="40dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/black_3d_button"
         android:elevation="6dp"
@@ -157,26 +150,26 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:backgroundTint="@null"
+        app:layout_constraintBottom_toTopOf="@+id/Terms"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/confirmLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/confirmLayout" />
 
-    <!-- Terms Layout-->
+    <!-- Terms Layout -->
     <LinearLayout
         android:id="@+id/Terms"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/policyLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signUpButton">
+        app:layout_constraintTop_toBottomOf="@+id/signUpButton">
 
-        <!-- "By clicking sign up, you agree to our" Text-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -186,34 +179,33 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <!-- "Terms of Service" Text-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/terms_of_service"
             android:fontFamily="@font/roboto"
             android:paddingStart="4dp"
+            android:text="@string/terms_of_service"
             android:textColor="#000000"
             android:textSize="12sp"
             tools:ignore="RtlSymmetry" />
 
     </LinearLayout>
 
-    <!-- Policy Layout-->
+    <!-- Policy Layout -->
     <LinearLayout
+        android:id="@+id/policyLayout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Terms">
+        app:layout_constraintTop_toBottomOf="@+id/Terms">
 
-        <!-- "and" Text-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -223,15 +215,14 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <!-- "Privacy Policy" Text-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/privacy_policy"
+            android:fontFamily="@font/roboto"
             android:paddingStart="4dp"
+            android:text="@string/privacy_policy"
             android:textColor="#000000"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto"/>
+            android:textSize="12sp" />
 
     </LinearLayout>
 
