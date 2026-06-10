@@ -66,4 +66,7 @@ public interface ApiService {
     @GET("api/sessions/{code}")
     Call<SessionResponse> getSession(@Path("code") String code);
 
+    @POST("api/auth/google")
+    Call<AuthResponse> googleLogin(@Body Map<String, String> request);
+
 }

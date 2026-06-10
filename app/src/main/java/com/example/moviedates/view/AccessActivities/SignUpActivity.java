@@ -138,6 +138,7 @@ public class SignUpActivity extends AppCompatActivity {
         prefs.apply();
 
         Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+        // Goto GenresActivity
         startActivity(new Intent(this, GenresActivity.class));
         finish();
 
