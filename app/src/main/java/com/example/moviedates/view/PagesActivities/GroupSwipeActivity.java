@@ -97,13 +97,43 @@ public class GroupSwipeActivity extends AppCompatActivity {
         backCardPoster = findViewById(R.id.backCardPoster);
 
         setupCardStack();
-        loadDeck();
         connectSocket();
         checkSessionState();
+
+        ArrayList<MovieDTO> intentDeck = getIntent().getParcelableArrayListExtra("deck");
+        if (intentDeck != null && !intentDeck.isEmpty()) {
+            loadDeckIntoView(intentDeck);
+        } else {
+            loadDeck();
+        }
 
         mehButton.setOnClickListener(v -> swipe(Direction.Left));
         loveButton.setOnClickListener(v -> swipe(Direction.Right));
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void loadDeckIntoView(List<MovieDTO> deck) {
+
+        movies.clear();
+        for (MovieDTO movie : deck) {
+            if (movie != null) movies.add(movie);
+        }
+
+        if (movies.isEmpty()) {
+            Toast.makeText(GroupSwipeActivity.this, "No movies available for this session.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        adapter.notifyDataSetChanged();
+        currentPosition = 0;
+
+        if (movies.size() > 1) {
+            backCardPoster.setVisibility(View.VISIBLE);
+            loadPoster(movies.get(1).getPosterPath(), backCardPoster);
+        } else {
+            backCardPoster.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void checkSessionState() {

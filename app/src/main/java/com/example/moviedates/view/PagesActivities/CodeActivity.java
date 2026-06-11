@@ -23,19 +23,26 @@ import com.example.moviedates.R;
 import com.example.moviedates.network.ApiClient;
 import com.example.moviedates.network.ApiService;
 import com.example.moviedates.network.model.AuthResponse;
+import com.example.moviedates.network.model.MovieDTO;
 import com.example.moviedates.network.model.SessionResponse;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 public class CodeActivity extends AppCompatActivity {
 
     private ImageView copyIcon;
     private LinearLayout avatarContainer;
     private MaterialButton startButton;
-
+    private Socket socket;
     private String roomCode;
     private boolean copied = false;
     private boolean polling = false;
@@ -71,17 +78,19 @@ public class CodeActivity extends AppCompatActivity {
         startButton.setOnClickListener(v -> startSession());
 
         startPolling();
+        connectSocket();
     }
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
         stopPolling();
-
         if (pollCall != null) pollCall.cancel();
         if (startCall != null) startCall.cancel();
-
+        if (socket != null) {
+            socket.disconnect();
+            socket.off();
+        }
     }
 
     private void copyCode() {
@@ -142,20 +151,17 @@ public class CodeActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void startSession() {
-
         stopPolling();
         startButton.setEnabled(false);
         startButton.setText("Starting…");
 
         startCall = ApiClient.getInstance(this).create(ApiService.class).startSession(roomCode);
         startCall.enqueue(new Callback<SessionResponse>() {
-
             @Override
             public void onResponse(@NonNull Call<SessionResponse> call, @NonNull Response<SessionResponse> response) {
                 if (isDestroyed() || isFinishing()) return;
-
-                if (response.isSuccessful()) {
-                    navigateToSwipe();
+                if (response.isSuccessful() && response.body() != null) {
+                    fetchDeckAndBroadcast();
                 } else {
                     startButton.setEnabled(true);
                     startButton.setText(getString(R.string.start_swiping));
@@ -167,7 +173,6 @@ public class CodeActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<SessionResponse> call, @NonNull Throwable t) {
                 if (isDestroyed() || isFinishing()) return;
-
                 startButton.setEnabled(true);
                 startButton.setText(getString(R.string.start_swiping));
                 Toast.makeText(CodeActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
@@ -176,15 +181,102 @@ public class CodeActivity extends AppCompatActivity {
         });
     }
 
-    private void navigateToSwipe() {
+    private void fetchDeckAndBroadcast() {
+        ApiClient.getInstance(this).create(ApiService.class).getDeck(roomCode)
+                .enqueue(new Callback<List<MovieDTO>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<MovieDTO>> call, @NonNull Response<List<MovieDTO>> response) {
+                        if (isDestroyed() || isFinishing()) return;
 
+                        if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                            if (socket != null && socket.connected()) {
+                                try {
+                                    org.json.JSONObject payload = new org.json.JSONObject();
+                                    payload.put("roomCode", roomCode);
+                                    org.json.JSONArray moviesArray = new org.json.JSONArray();
+                                    for (MovieDTO movie : response.body()) {
+                                        org.json.JSONObject m = new org.json.JSONObject();
+                                        m.put("id", movie.getId());
+                                        m.put("title", movie.getTitle());
+                                        m.put("posterPath", movie.getPosterPath());
+                                        m.put("overview", movie.getOverview());
+                                        m.put("voteAverage", movie.getVoteAverage());
+                                        m.put("releaseDate", movie.getReleaseDate());
+                                        moviesArray.put(m);
+                                    }
+                                    payload.put("movies", moviesArray);
+                                    socket.emit("start_session", payload);
+                                } catch (Exception e) {
+                                    android.util.Log.e("CodeActivity", "Socket emit failed: " + e.getMessage());
+                                }
+                            }
+                            navigateToSwipe(response.body()); // always navigate, socket is optional
+                        } else {
+                            runOnUiThread(() -> {
+                                Toast.makeText(CodeActivity.this,
+                                        "No movies available. Try again.", Toast.LENGTH_LONG).show();
+                                startButton.setEnabled(true);
+                                startButton.setText(getString(R.string.start_swiping));
+                                startPolling();
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<MovieDTO>> call, @NonNull Throwable t) {
+                        if (isDestroyed() || isFinishing()) return;
+                        runOnUiThread(() -> {
+                            Toast.makeText(CodeActivity.this,
+                                    "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            startButton.setEnabled(true);
+                            startButton.setText(getString(R.string.start_swiping));
+                            startPolling();
+                        });
+                    }
+                });
+    }
+
+    private void connectSocket() {
+        try {
+            socket = IO.socket("http://129.159.31.140:9092");
+
+            socket.on(Socket.EVENT_CONNECT, args -> {
+                socket.emit("join_room", roomCode);
+                android.util.Log.d("CodeActivity", "Socket connected, joined room: " + roomCode);
+            });
+
+            socket.on("session_started", args -> {
+                if (isDestroyed() || isFinishing()) return;
+                runOnUiThread(() -> {
+                    stopPolling();
+                    navigateToSwipe(null);
+                });
+            });
+
+            socket.on(Socket.EVENT_CONNECT_ERROR, args ->
+                    android.util.Log.e("CodeActivity", "Socket error: " + args[0]));
+
+            socket.connect();
+
+        } catch (Exception e) {
+            android.util.Log.e("CodeActivity", "Socket init failed: " + e.getMessage());
+        }
+    }
+
+    private void navigateToSwipe(List<MovieDTO> deck) {
+        if (socket != null) {
+            socket.disconnect();
+            socket.off();
+            socket = null;
+        }
         Intent intent = new Intent(this, GroupSwipeActivity.class);
         intent.putExtra("room_code", roomCode);
-
+        if (deck != null) {
+            intent.putParcelableArrayListExtra("deck", new ArrayList<>(deck));
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
-
     }
 
     private void renderAvatars(java.util.List<AuthResponse.UserPayload> participants) {
@@ -197,11 +289,11 @@ public class CodeActivity extends AppCompatActivity {
         int overlap = dpToPx(18);
 
         int[][] gradientPairs = {
-                                { 0xFFE91E63, 0xFFFF6090 },
-                                { 0xFF2196F3, 0xFF64B5F6 },
-                                { 0xFF4CAF50, 0xFF81C784 },
-                                { 0xFFFF9800, 0xFFFFCC02 },
-                                { 0xFF9C27B0, 0xFFCE93D8 },
+                { 0xFFE91E63, 0xFFFF6090 },
+                { 0xFF2196F3, 0xFF64B5F6 },
+                { 0xFF4CAF50, 0xFF81C784 },
+                { 0xFFFF9800, 0xFFFFCC02 },
+                { 0xFF9C27B0, 0xFFCE93D8 },
         };
 
         for (int i = 0; i < participants.size(); i++) {
