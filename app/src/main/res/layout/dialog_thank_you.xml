@@ -18,6 +18,7 @@
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintWidth_percent="0.45"
+        android:background="@drawable/dialog_glow"
         app:layout_constraintTop_toTopOf="@id/dialogIconWrapper"
         app:layout_constraintBottom_toBottomOf="@id/dialogIconWrapper"
         app:layout_constraintStart_toStartOf="@id/dialogIconWrapper"

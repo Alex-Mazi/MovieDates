@@ -69,4 +69,7 @@ public interface ApiService {
     @POST("api/auth/google")
     Call<AuthResponse> googleLogin(@Body Map<String, String> request);
 
+    @GET("api/movies/{id}/providers")
+    Call<Map<String, Object>> getProviders(@Path("id") int movieId);
+
 }

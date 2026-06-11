@@ -1,31 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Not done -->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:accessibilityHeading="false"
     android:background="@drawable/background8"
     android:fitsSystemWindows="true"
-    android:visibility="visible"
-    tools:context=".MainActivity"
-    tools:visibility="visible"
-    tools:ignore="UnusedAttribute">
+    tools:context=".MainActivity">
 
     <!-- Movie Dates Logo -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
-        android:layout_height="68dp"
+        android:layout_height="56dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_marginTop="30dp"
         android:contentDescription="@string/moviedateslogo"
+        app:layout_constraintBottom_toTopOf="@+id/movieCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/movieCard"
+        app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/logo_movie_dates" />
 
     <!-- Movie Card -->
@@ -35,17 +31,16 @@
         android:layout_height="0dp"
         android:layout_marginStart="48dp"
         android:layout_marginEnd="48dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintDimensionRatio="2:3"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/matchText"
-        app:layout_constraintVertical_chainStyle="packed"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="#8A2E2E2E"
         app:cardCornerRadius="24dp"
         app:cardElevation="4dp"
-        app:strokeWidth="0dp"
-        app:cardBackgroundColor="#8A2E2E2E">
+        app:layout_constraintBottom_toTopOf="@+id/matchText"
+        app:layout_constraintDimensionRatio="3:4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:strokeWidth="0dp">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -56,8 +51,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="top|start"
-                android:layout_marginStart="0.27dp"
-                android:layout_marginTop="-3dp"
                 android:contentDescription="movie"
                 android:scaleType="centerCrop"
                 android:src="@drawable/p33156_p_v8_aq1"
@@ -74,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
         android:fontFamily="@font/youth"
         android:letterSpacing="0.08"
         android:scaleX="1.5"
@@ -83,32 +76,53 @@
         android:textAlignment="center"
         android:textColor="#FFFFFFFF"
         android:textSize="50sp"
+        app:layout_constraintBottom_toTopOf="@+id/swipeText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/swipeText"
-        app:layout_constraintTop_toBottomOf="@id/movieCard" />
+        app:layout_constraintTop_toBottomOf="@+id/movieCard" />
 
     <!-- "Available to rent or buy" Text -->
     <TextView
         android:id="@+id/swipeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/roboto"
         android:text="@string/available_to_rent_or_buy"
         android:textColor="#9A92A8"
         android:textSize="11sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/providersScroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintTop_toBottomOf="@id/matchText" />
+        app:layout_constraintTop_toBottomOf="@+id/matchText" />
+
+    <HorizontalScrollView
+        android:id="@+id/providersScroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@+id/swipeText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:id="@+id/providersRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp" />
+
+    </HorizontalScrollView>
 
     <nl.dionsegijn.konfetti.KonfettiView
         android:id="@+id/konfettiView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="20dp"/>
+        android:elevation="20dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

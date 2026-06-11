@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Not done -->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,71 +13,73 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
+        android:layout_height="52dp"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="52dp"
         android:contentDescription="@string/moviedateslogo"
+        app:layout_constraintBottom_toTopOf="@+id/titleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/logo_movie_dates" />
 
-    <!-- "Help us determine what you like" Text-->
+    <!-- "Help us determine what you like" Text -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/roboto"
         android:text="@string/help_us_determine_what_you_like"
         android:textColor="#000000"
         android:textSize="15sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/swipeUpHint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <!-- "Swipe up to skip" Text-->
+    <!-- "Swipe up to skip" Text -->
     <TextView
         android:id="@+id/swipeUpHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="6dp"
         android:fontFamily="@font/roboto"
         android:text="@string/swipe_up_to_skip"
         android:textColor="#9A92A8"
         android:textSize="11sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/cardStackView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
     <!-- Fake Back Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/backCardPreview"
         android:layout_width="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintDimensionRatio="2:3"
-        android:layout_height="465dp"
-        android:layout_marginTop="0dp"
-        android:rotation="-7"
-        android:translationX="18dp"
-        android:translationY="10dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:elevation="2dp"
+        android:rotation="-5"
+        android:translationX="0dp"
+        android:translationY="8dp"
+        app:cardBackgroundColor="#00000000"
         app:cardCornerRadius="28dp"
         app:cardElevation="2dp"
-        app:cardBackgroundColor="#00000000"
+        app:layout_constraintDimensionRatio="2:3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/swipeUpHint">
+        app:layout_constraintTop_toTopOf="@+id/cardStackView">
 
         <ImageView
             android:id="@+id/backCardPoster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/back_card"
             android:scaleType="centerCrop" />
 
     </androidx.cardview.widget.CardView>
@@ -85,35 +87,38 @@
     <!-- Movies Card Stack -->
     <com.yuyakaido.android.cardstackview.CardStackView
         android:id="@+id/cardStackView"
-        android:layout_width="315dp"
-        android:layout_height="465dp"
-        android:layout_marginTop="10dp"
-        android:elevation="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="8dp"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:elevation="8dp"
+        app:layout_constraintDimensionRatio="2:3"
+        app:layout_constraintBottom_toTopOf="@+id/swipeButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/swipeUpHint"/>
+        app:layout_constraintTop_toBottomOf="@+id/swipeUpHint" />
 
     <!-- Swipe Button Bar -->
     <LinearLayout
         android:id="@+id/swipeButtons"
         android:layout_width="0dp"
+        android:layout_height="46dp"
         android:layout_marginStart="70dp"
         android:layout_marginEnd="70dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="42dp"
         android:background="@drawable/rectangle2"
         android:elevation="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="18dp"
-        app:layout_constraintBottom_toTopOf="@id/swipeText"
+        app:layout_constraintBottom_toTopOf="@+id/swipeText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardStackView">
 
-        <!-- "Meh..." Button -->
         <TextView
             android:id="@+id/mehButton"
             android:layout_width="wrap_content"
@@ -138,7 +143,6 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- "Loved!" Button -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -165,14 +169,15 @@
         android:id="@+id/swipeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:fontFamily="@font/roboto"
         android:text="@string/swipe_right_or_left"
         android:textColor="#9A92A8"
         android:textSize="11sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/swipeButtons" />
+        app:layout_constraintTop_toBottomOf="@+id/swipeButtons" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

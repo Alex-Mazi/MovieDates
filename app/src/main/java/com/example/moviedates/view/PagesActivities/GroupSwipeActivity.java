@@ -517,7 +517,12 @@ public class GroupSwipeActivity extends AppCompatActivity {
             holder.movieTitle.setText(movie.getTitle());
             String year = movie.getReleaseDate() != null && movie.getReleaseDate().length() >= 4 ? movie.getReleaseDate().substring(0, 4) : "";
             holder.movieInfo.setText(year);
-            holder.movieGenres.setText("");
+            List<String> genres = movie.getGenres();
+            if (genres != null && !genres.isEmpty()) {
+                holder.movieGenres.setText(android.text.TextUtils.join(" · ", genres));
+            } else {
+                holder.movieGenres.setText("");
+            }
             int ratingPct = (int) Math.round(movie.getVoteAverage() * 10);
             holder.ratingProgress.setProgress(ratingPct);
             holder.ratingText.setText(ratingPct + "%");
